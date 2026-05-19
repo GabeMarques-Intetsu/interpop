@@ -121,4 +121,11 @@ interpop/
 
 ## Licença
 
-A definir.
+**Proprietária — todos os direitos reservados** · Copyright © 2026 Gabriel Marques.
+
+Ver [LICENSE](LICENSE) para os termos completos. Resumo:
+
+- **Você pode**: baixar, executar localmente para estudo/avaliação, e **se inspirar** em técnicas, padrões e decisões de design para projetos independentes e distintos.
+- **Você NÃO pode**: copiar trechos substanciais para outros projetos, redistribuir, revender, sublicenciar, hospedar versão pública ou usar como base de produto comercial.
+- **Cliente Interpop**: tem autorização expressa para operar este software como produto editorial próprio (interpop.cc).
+- **Outros usos**: pedidos de autorização (licenciamento comercial, fork público, parceria) via GitHub `@GabeMarques-Intetsu`.

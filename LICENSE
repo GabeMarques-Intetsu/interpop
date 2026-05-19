@@ -1,0 +1,127 @@
+# Licença Proprietária — Interpop
+
+**Copyright © 2026 Gabriel Marques. Todos os direitos reservados.**
+
+Este software (denominado "Interpop", incluindo todo o código-fonte,
+documentação, recursos gráficos, conteúdo editorial e arquivos de
+configuração contidos neste repositório — coletivamente, o "Software")
+é de **propriedade exclusiva de Gabriel Marques**, doravante "Autor".
+
+---
+
+## 1. Concessão limitada ao público em geral
+
+O Autor concede a qualquer pessoa que obtenha acesso a este repositório
+uma licença não-exclusiva, não-transferível, gratuita e revogável,
+limitada às seguintes finalidades:
+
+1. **Visualizar** o código-fonte através do GitHub ou clone local.
+2. **Executar o Software localmente** (em máquina pessoal de desenvolvimento)
+   para fins de estudo, avaliação técnica ou aprendizado.
+3. **Inspirar-se** nas técnicas, padrões arquiteturais, decisões de
+   design e abordagens didáticas presentes no Software para aplicação
+   em projetos independentes e distintos.
+
+"Inspirar-se" significa: aprender com a abordagem, replicar ideias
+gerais e padrões de alto nível em código original autoral. **Não inclui**
+copiar trechos substanciais de código, ativos visuais, conteúdo
+editorial ou estrutura de pastas/arquivos diretamente.
+
+---
+
+## 2. Proibições
+
+Sem autorização prévia, expressa e por escrito do Autor, **é proibido**:
+
+1. **Copiar** trechos substanciais (mais que pequenos fragmentos de
+   referência) do código-fonte para outros projetos.
+2. **Redistribuir** o Software, no todo ou em parte, sob qualquer forma
+   (incluindo fork público, espelho, pacote, container ou compilação).
+3. **Sublicenciar**, alugar, emprestar, vender, comercializar, monetizar
+   por qualquer meio, ou usar como base para um produto/serviço comercial
+   competitivo ou similar.
+4. **Hospedar** uma versão pública (em domínio próprio ou de terceiros)
+   do Software ou de obra derivada, exceto quando essa hospedagem for
+   feita pelo próprio Autor ou pelo Cliente Autorizado (vide §3).
+5. **Remover ou modificar** os avisos de copyright, autoria ou esta
+   licença em qualquer cópia local ou derivada.
+6. **Criar obras derivadas** (forks adaptados, traduções, ports para
+   outras linguagens, refatorações estruturais) com finalidade
+   comercial ou de distribuição pública.
+7. **Usar o Software** ou qualquer parte dele para treinar modelos de
+   aprendizado de máquina destinados a uso comercial sem autorização
+   por escrito.
+
+---
+
+## 3. Autorização específica ao Cliente Interpop
+
+O **Cliente Interpop** — entidade titular do produto editorial publicado
+em interpop.cc (ou domínio que vier a substituí-lo) — possui autorização
+expressa e contínua do Autor para:
+
+1. **Operar** o Software em ambiente de produção como produto editorial
+   próprio.
+2. **Adaptar e estender** o Software para necessidades operacionais
+   internas (novos artigos, novos campos editoriais, integrações).
+3. **Permitir que colaboradores autorizados** (redatores, administradores
+   contratados) utilizem o Software no exercício de suas funções.
+
+Esta autorização **não inclui**:
+- Sublicenciar o Software a terceiros.
+- Redistribuir, vender ou ceder o Software fora do contexto do produto
+  editorial Interpop.
+- Remover os avisos de autoria do Autor.
+
+A autorização ao Cliente Interpop poderá ser revogada pelo Autor mediante
+notificação por escrito caso os termos desta seção sejam descumpridos.
+
+---
+
+## 4. Reserva de direitos
+
+Todos os direitos não expressamente concedidos por esta licença
+permanecem **reservados ao Autor**. Em particular, o Autor mantém:
+
+- Direitos autorais integrais sobre o código, design e conteúdo.
+- Direito de licenciar o Software a terceiros sob outros termos.
+- Direito de descontinuar, alterar ou remover esta licença para uso
+  futuro do repositório (mudanças não retroativas a cópias já obtidas
+  sob os termos anteriores).
+
+---
+
+## 5. Ausência de garantia
+
+O Software é fornecido **"NO ESTADO EM QUE SE ENCONTRA" ("AS IS")**, sem
+garantias de qualquer espécie, expressas ou implícitas, incluindo, mas
+não se limitando a, garantias de comercialização, adequação a um
+propósito específico e não violação. Em nenhuma hipótese o Autor será
+responsável por qualquer reclamação, dano ou outra responsabilidade,
+seja em ação contratual, ato ilícito ou outro, decorrente de, ou em
+conexão com, o Software ou seu uso.
+
+---
+
+## 6. Lei aplicável e foro
+
+Esta licença é regida pelas leis da **República Federativa do Brasil**.
+Fica eleito o **foro da comarca de domicílio do Autor** para dirimir
+quaisquer controvérsias decorrentes da interpretação ou execução desta
+licença, com renúncia expressa a qualquer outro, por mais privilegiado
+que seja.
+
+---
+
+## 7. Contato para autorização
+
+Pedidos de autorização para usos não cobertos pelos §§1 e 3 (incluindo
+licenciamento comercial, redistribuição autorizada, fork público,
+parceria ou cessão de direitos) devem ser dirigidos diretamente ao
+Autor por meio do canal oficial vinculado ao perfil
+`GabeMarques-Intetsu` no GitHub.
+
+---
+
+*Este documento é um instrumento privado de licenciamento de software.
+Versão 1.0 · 19 de maio de 2026.*
