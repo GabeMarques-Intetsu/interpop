@@ -9,13 +9,14 @@ Catálogo de todas as skills referenciadas em `AGENTS.md` (seção *Plugins ativ
 | 1 | `andrej-karpathy-skills@karpathy-skills` | Plugin (harness) | `~/.claude/plugins/karpathy-skills/` |
 | 2 | `superpowers@claude-plugins-official` | Plugin (oficial) | `~/.claude/plugins/claude-plugins-official/plugins/superpowers/` |
 | 3 | `superpowers@superpowers-dev` | Plugin (dev) | `~/.claude/plugins/superpowers-dev/plugins/superpowers/` |
-| 4 | **`referencias-dashboards`** | **Skill local** | **[`./referencias-dashboards/`](./referencias-dashboards/)** |
-| 5 | **`ecossistemas-ui-ux`** | **Skill local** | **[`./ecossistemas-ui-ux/`](./ecossistemas-ui-ux/)** |
-| 6 | `frontend-design@claude-plugins-official` | Plugin (oficial) | `~/.claude/plugins/claude-plugins-official/plugins/frontend-design/` |
+| 4 | **`claude-cookbooks`** | **Skill local** | **[`./claude-cookbooks/`](./claude-cookbooks/)** |
+| 5 | **`referencias-dashboards`** | **Skill local** | **[`./referencias-dashboards/`](./referencias-dashboards/)** |
+| 6 | **`ecossistemas-ui-ux`** | **Skill local** | **[`./ecossistemas-ui-ux/`](./ecossistemas-ui-ux/)** |
+| 7 | `frontend-design@claude-plugins-official` | Plugin (oficial) | `~/.claude/plugins/claude-plugins-official/plugins/frontend-design/` |
 
 ## Skills locais — fonte de verdade
 
-`ecossistemas-ui-ux` e `referencias-dashboards` derivam dos PDFs em `docs/` deste projeto. Cada uma contém:
+`claude-cookbooks`, `ecossistemas-ui-ux` e `referencias-dashboards` derivam de fontes deste projeto (cookbook Anthropic local + PDFs em `docs/`). Cada uma contém:
 
 - `SKILL.md` — definição com YAML frontmatter (`name`, `description`) + corpo carregado pelo Claude Code quando invocada.
 - `README.md` — descrição voltada ao desenvolvedor.
@@ -26,16 +27,17 @@ Catálogo de todas as skills referenciadas em `AGENTS.md` (seção *Plugins ativ
 Verificação:
 
 ```bash
-ls -la ~/.claude/skills/ecossistemas-ui-ux    ~/.claude/skills/referencias-dashboards
-# → ambas devem apontar para .../interpop/skills/<nome>
+ls -la ~/.claude/skills/claude-cookbooks ~/.claude/skills/ecossistemas-ui-ux ~/.claude/skills/referencias-dashboards
+# → todas devem apontar para .../interpop/skills/<nome>
 ```
 
 Para replicar em uma máquina nova (após clonar o repositório):
 
 ```bash
 PROJECT=/caminho/para/interpop
-ln -s "$PROJECT/skills/ecossistemas-ui-ux"    ~/.claude/skills/ecossistemas-ui-ux
-ln -s "$PROJECT/skills/referencias-dashboards" ~/.claude/skills/referencias-dashboards
+ln -s "$PROJECT/skills/claude-cookbooks"        ~/.claude/skills/claude-cookbooks
+ln -s "$PROJECT/skills/ecossistemas-ui-ux"      ~/.claude/skills/ecossistemas-ui-ux
+ln -s "$PROJECT/skills/referencias-dashboards"  ~/.claude/skills/referencias-dashboards
 ```
 
 ## Plugins — gerenciados pela harness

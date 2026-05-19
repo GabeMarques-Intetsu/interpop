@@ -1,48 +1,115 @@
 # Agent Instructions — Interpop
 
-## Plugins ativos (ordem de prioridade)
+> Projeto editorial brasileiro que analisa criticamente o **Soft Power** e a geopolítica da cultura pop (música, moda, cinema, literatura, cultura digital). Stack: **React 19 + TypeScript + Vite** no frontend, **Django 5 + DRF** no backend, **uv** para Python, **npm** para Node, **PostgreSQL** em produção (SQLite em dev). Hospedagem: **Hostinger KVM 1** (Nginx + gunicorn + systemd + Let's Encrypt).
 
-Sempre que houver sobreposição de orientações, aplicar pela ordem abaixo — o primeiro tem precedência. Esta lista reflete plugins e skills locais instalados e ativados na harness; `skill-creator` está instalado mas não entra no fluxo do projeto Interpop (uso interno apenas, não citar).
+---
 
-1. **`andrej-karpathy-skills@karpathy-skills`** — diretriz mestre. Clareza intuitiva, explicação progressiva, raciocínio do primeiro princípio, prosa enxuta. Define o **tom e a forma** de qualquer resposta técnica ou de pesquisa.
-2. **`superpowers@claude-plugins-official`** — base oficial do método: TDD, brainstorming, debugging sistemático, escrita de planos, execução de planos, revisão de código, finalização de branches. Define o **processo**.
-3. **`superpowers@superpowers-dev`** — variante de desenvolvimento do superpowers (skills mais recentes/experimentais). Usar como **complemento** ao oficial quando aplicável.
-4. **`referencias-dashboards`** (skill local, `skills/referencias-dashboards/`) — derivada do PDF `docs/guia_referencias_dashboards.pdf`. Classifica qualquer painel em operacional (Geckoboard), de negócio (Klipfolio) ou analítico (Power BI / Looker) e impõe regras duras: paleta ≤3 cores, cantos arredondados suaves, filtros sempre visíveis, agregados monetários/percentuais no topo. **Em decisões de dashboard, vence o `ecossistemas-ui-ux`** (especialização > geral).
-5. **`ecossistemas-ui-ux`** (skill local, `skills/ecossistemas-ui-ux/`) — derivada do PDF `docs/ecossistema_ui_ux_revisado.pdf` do próprio projeto. Combina 5 categorias de fontes (galerias, sistemas de design, auditorias, comunidades, análise técnica) antes de qualquer decisão de UI/UX no Interpop que **não seja dashboard**. Por ser calibrada para o projeto, vence o `frontend-design` em conflito de orientação visual.
-6. **`frontend-design@claude-plugins-official`** — especialização genérica de frontend (padrões visuais, componentização React). Base mais ampla; serve como referência quando nem `referencias-dashboards` nem `ecossistemas-ui-ux` cobrem o caso (ex.: padrões puramente de implementação React/Tailwind).
+## 1. Comandos do projeto (leitura obrigatória)
 
-## Package Manager
-Use **npm**: `npm install`, `npm run dev`, `npm run build`, `npm run lint`
+### Frontend (Node + npm)
 
-## File-Scoped Commands
-| Task | Command |
+| Task | Comando |
 |------|---------|
+| Install | `npm install` |
+| Dev server | `npm run dev` → http://localhost:5173 |
+| Build de produção | `npm run build` |
 | Typecheck | `npx tsc --noEmit` |
-| Lint | `npx eslint src/path/to/file.tsx` |
-| Build | `npm run build` |
-| Dev server | `npm run dev` |
+| Lint (arquivo) | `npx eslint src/path/to/file.tsx` |
 
-## Commit Attribution
-AI commits MUST include:
+### Backend (Python + uv — **NÃO** usar `pip` / `python -m venv`)
+
+| Task | Comando |
+|------|---------|
+| Sync deps (após git pull) | `cd backend && uv sync` |
+| Sync travado (CI / deploy) | `uv sync --frozen` |
+| Adicionar dependência | `uv add <pacote>` (atualiza `pyproject.toml` + `uv.lock`) |
+| Dev server | `uv run python manage.py runserver` → http://127.0.0.1:8000 |
+| Migrate | `uv run python manage.py migrate` |
+| Createsuperuser | `uv run python manage.py createsuperuser` |
+| Django system check | `uv run python manage.py check` |
+| Shell | `uv run python manage.py shell` |
+
+`uv` instala a versão certa do Python automaticamente (declarada em `pyproject.toml`). Não precisa ativar venv — `uv run` resolve sozinho. Migração de pip→uv já está feita; ver `backend/pyproject.toml` + `backend/uv.lock`.
+
+### Commits AI
+
+Todo commit feito por agente AI DEVE terminar com:
+
 ```
-Co-Authored-By: Claude Opus 4.7 <noreply@anthropic.com>
+Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>
 ```
 
-## Padrão `ecossistemas_ui_ux` (sumário)
+---
 
-Antes de qualquer decisão de UI/UX que **não seja dashboard**, combinar fontes das 5 categorias — nenhuma cobre tudo.
+## 2. Plugins e skills ativos (ordem de prioridade)
 
-**Categorias**: galerias (Awwwards, Godly, Siteinspire) · sistemas de design (Material, Apple HIG, Carbon/Fluent) · auditorias (Lighthouse, WAVE, PageSpeed) · comunidades (Mobbin, Muzli, Dribbble) · análise técnica (CSS Stats, a11y Project, Wappalyzer).
+Sempre que houver sobreposição de orientações, aplicar pela ordem abaixo — o primeiro tem precedência. Esta lista reflete plugins (gerenciados pela harness) + skills locais (em `skills/`); `skill-creator` está instalado mas não entra no fluxo do projeto (uso interno).
 
-**Fluxo obrigatório**: inspirar (Awwwards/Godly) → estudar princípios (Material/Apple HIG) → observar apps reais (Mobbin) → validar com métricas (Lighthouse + WAVE) → monitorar stack (CSS Stats + Wappalyzer).
+1. **`andrej-karpathy-skills@karpathy-skills`** — diretriz mestre. Clareza intuitiva, explicação progressiva, raciocínio do primeiro princípio, prosa enxuta. Define **tom e forma** de qualquer resposta técnica.
+2. **`superpowers@claude-plugins-official`** — base oficial do método: TDD, brainstorming, debugging sistemático, escrita de planos, execução de planos, revisão de código, finalização de branches. Define **processo**.
+3. **`superpowers@superpowers-dev`** — variante de desenvolvimento (skills experimentais). Complemento ao oficial.
+4. **`claude-cookbooks`** (skill local, `skills/claude-cookbooks/`) — catálogo dos notebooks oficiais Anthropic em `/home/gabriel/Documentos/Projetos/config/claude-cookbooks-main/`. **Antes de implementar qualquer feature Claude API** (caching, tool use, RAG, multimodal, agent SDK, evals), consultar o notebook correspondente. Define **referência de implementação**.
+5. **`referencias-dashboards`** (skill local, `skills/referencias-dashboards/`) — regras duras para dashboards/KPIs/painéis admin. **Em decisões de dashboard, vence `ecossistemas-ui-ux`** (especialização > geral).
+6. **`ecossistemas-ui-ux`** (skill local, `skills/ecossistemas-ui-ux/`) — combina 5 categorias de fontes antes de qualquer decisão de UI/UX que **não seja dashboard**. Calibrada para o projeto; vence `frontend-design` em conflito visual.
+7. **`frontend-design@claude-plugins-official`** — base genérica React/Tailwind. Usar quando nem `referencias-dashboards` nem `ecossistemas-ui-ux` cobrem o caso.
 
-**Princípio**: observar como líderes resolvem problemas, não copiar estética. Bom design é **funcional, acessível e rápido** — auditoria torna isso mensurável.
+---
 
-📖 **Detalhe completo (tabelas de fontes, exemplos, justificativas):** [`skills/ecossistemas-ui-ux/SKILL.md`](./skills/ecossistemas-ui-ux/SKILL.md). Fonte original: `docs/ecossistema_ui_ux_revisado.pdf`.
+## 3. Sumários de invocação (gatilhos garantidos)
 
-## Padrão `referencias_dashboards` (sumário)
+Cada sumário abaixo está aqui propositalmente — ele é carregado no system prompt a cada sessão e funciona como **guardrail** caso o protocolo de skills falhe ou não detecte o caso. O detalhe completo vive na skill correspondente.
 
-Antes de projetar ou refatorar qualquer dashboard, classificar o tipo e cruzar fontes das 3 categorias.
+### `karpathy-skills` (sumário)
+
+**Quando aplicar**: em **toda** resposta técnica ou de pesquisa não-trivial.
+
+**Princípios**:
+- Explicação do primeiro princípio (deduzir antes de memorizar).
+- Progressão didática (do simples ao complexo, sem pular passos).
+- Prosa enxuta — eliminar palavras supérfluas; código antes de jargão.
+- Mostrar trade-offs e raciocínio, não só a conclusão.
+
+📖 **Detalhe**: plugin `andrej-karpathy-skills@karpathy-skills` (auto-carregado pela harness).
+
+### `superpowers` (sumário)
+
+**Quando aplicar**: ao planejar, implementar, debugar ou revisar.
+
+**Workflows-chave**:
+- `brainstorming` — antes de planos não-triviais.
+- `writing-plans` / `executing-plans` — para tarefas multi-step.
+- `test-driven-development` — antes de código de produção.
+- `systematic-debugging` — método científico (hipótese → evidência → fix).
+- `requesting-code-review` / `receiving-code-review` — antes/após PR.
+- `finishing-a-development-branch` — checklist de fechamento.
+
+**Princípio**: se há 1% de chance de uma skill ser relevante, **invocar**.
+
+📖 **Detalhe**: plugins `superpowers@claude-plugins-official` + `superpowers@superpowers-dev`.
+
+### `claude-cookbooks` (sumário)
+
+**Quando aplicar**: **antes de escrever qualquer código** que use Claude API / Anthropic SDK.
+
+**Caminho local**: `/home/gabriel/Documentos/Projetos/config/claude-cookbooks-main/`
+
+**Categorias e quando abrir**:
+- `tool_use/` — function calling, JSON estruturado, memória, compactação.
+- `multimodal/`, `misc/pdf_*` — imagens, PDFs, OCR, charts.
+- `extended_thinking/` — reasoning explícito.
+- `claude_agent_sdk/` — agent recipes pré-prontos (research, observability, SRE).
+- `capabilities/` — classificação, RAG, sumarização.
+- `third_party/Pinecone`, `VoyageAI` — RAG com vector DB.
+- `misc/prompt_caching.ipynb` — **sempre** antes de adicionar cache.
+- `misc/building_evals.ipynb` — pipelines de avaliação.
+
+**Regra dura**: features de Claude API em Interpop devem citar o notebook-fonte em comment quando o padrão é não-óbvio.
+
+📖 **Detalhe** (catálogo completo, 84 notebooks): [`skills/claude-cookbooks/SKILL.md`](./skills/claude-cookbooks/SKILL.md). Fonte: `claude-cookbooks-main/`.
+
+### `referencias_dashboards` (sumário)
+
+**Quando aplicar**: antes de projetar ou refatorar qualquer dashboard, painel admin ou tela de KPI.
 
 **Tipos de dashboard**: operacional (Geckoboard — minimalismo, tempo real) · negócio (Klipfolio — KPIs por setor) · analítico (Power BI / Looker — densidade com drill-down).
 
@@ -57,11 +124,46 @@ Antes de projetar ou refatorar qualquer dashboard, classificar o tipo e cruzar f
 
 **Princípio**: dashboard ruim mostra tudo; dashboard bom mostra **o que importa na ordem que importa**.
 
-📖 **Detalhe completo (tabelas de fontes, exemplos por categoria, casos práticos):** [`skills/referencias-dashboards/SKILL.md`](./skills/referencias-dashboards/SKILL.md). Fonte original: `docs/guia_referencias_dashboards.pdf`.
+📖 **Detalhe**: [`skills/referencias-dashboards/SKILL.md`](./skills/referencias-dashboards/SKILL.md). Fonte: `docs/guia_referencias_dashboards.pdf`.
 
-## Key Conventions
-- Stack: React 19 + TypeScript + Vite + React Router 7
-- Backend separado em `backend/`
-- Antes de qualquer mudança de UI/UX: invocar a skill `ecossistemas-ui-ux` (sumário acima)
-- Antes de projetar ou refatorar dashboard: invocar a skill `referencias-dashboards` (sumário acima)
-- Validar acessibilidade (WCAG 2.2) e Core Web Vitals em toda entrega de frontend
+### `ecossistemas_ui_ux` (sumário)
+
+**Quando aplicar**: antes de qualquer decisão de UI/UX que **não seja dashboard**.
+
+**Categorias**: galerias (Awwwards, Godly, Siteinspire) · sistemas de design (Material, Apple HIG, Carbon/Fluent) · auditorias (Lighthouse, WAVE, PageSpeed) · comunidades (Mobbin, Muzli, Dribbble) · análise técnica (CSS Stats, a11y Project, Wappalyzer).
+
+**Fluxo obrigatório**: inspirar (Awwwards/Godly) → estudar princípios (Material/Apple HIG) → observar apps reais (Mobbin) → validar com métricas (Lighthouse + WAVE) → monitorar stack (CSS Stats + Wappalyzer).
+
+**Princípio**: observar como líderes resolvem problemas, não copiar estética. Bom design é **funcional, acessível e rápido** — auditoria torna isso mensurável.
+
+📖 **Detalhe**: [`skills/ecossistemas-ui-ux/SKILL.md`](./skills/ecossistemas-ui-ux/SKILL.md). Fonte: `docs/ecossistema_ui_ux_revisado.pdf`.
+
+### `frontend-design` (sumário)
+
+**Quando aplicar**: padrões React/Tailwind genéricos que nem `referencias-dashboards` nem `ecossistemas-ui-ux` cobrem (ex.: estrutura de componente, hooks, state management, animations leves).
+
+**Princípios** (do plugin oficial Anthropic):
+- Composição > configuração; props simples.
+- A11y por default (semantic HTML, ARIA quando necessário, foco visível).
+- Performance: lazy load, code-split por rota, memoization criteriosa.
+
+📖 **Detalhe**: plugin `frontend-design@claude-plugins-official` (auto-carregado).
+
+---
+
+## 4. Convenções do projeto (Key Conventions)
+
+- **Frontend**: React 19 + TypeScript + Vite + React Router 7. Componentes em `src/components/`, páginas em `src/pages/`, serviços axios em `src/services/`.
+- **Backend**: Django 5 + DRF + JWT em cookie httpOnly + django-axes (brute-force). Apps em `backend/apps/{articles,comments,moderation,newsletter,users,audit}`. Settings split em `config/settings/{base,development,production}.py`.
+- **Auth**: roles `admin` / `editor` / `user`. Admin pode tudo; editor publica + solicita ban; user (leitor) só lê/curte/comenta.
+- **Skills locais**: viver em `skills/<nome>/`. Symlinks de `~/.claude/skills/<nome>` → projeto (single source of truth). Plugins ativos NÃO entram em `skills/`.
+- **Antes de UI/UX**: invocar `ecossistemas-ui-ux` (sumário §3).
+- **Antes de dashboard**: invocar `referencias-dashboards` (sumário §3).
+- **Antes de Claude API**: invocar `claude-cookbooks` (sumário §3).
+- **Antes de qualquer mudança**: aplicar o protocolo de skills do `~/.claude/CLAUDE.md` global (mapear domínio → listar skills → declarar → invocar → executar).
+- **Validação obrigatória de frontend**: WCAG 2.2 + Core Web Vitals em toda entrega.
+- **`backend/.env` e `backend/db.sqlite3`** estão no `.gitignore` — nunca commitar.
+
+---
+
+*Atualizado em 2026-05-19 — adicionada skill `claude-cookbooks`, comandos `uv` no topo, sumários para todos os plugins/skills ativos (garante invocação mesmo se o protocolo falhar), reorganização para colocar comandos antes das listas longas.*
