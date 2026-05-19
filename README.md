@@ -1,73 +1,86 @@
-# React + TypeScript + Vite
+# Interpop
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+> Projeto editorial independente que analisa criticamente o **Soft Power** e
+> o papel da cultura pop na manutenção da hegemonia global.
 
-Currently, two official plugins are available:
+A partir de música, moda, cinema, literatura e cultura digital, o Interpop
+investiga como determinados atores exercem influência política de forma
+indireta no sistema internacional.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+| Camada | Tecnologia |
+|---|---|
+| **Frontend** | React 19 + TypeScript + Vite + React Router 7 |
+| **Backend** | Django 5 + Django REST Framework |
+| **Banco** | SQLite (dev) · PostgreSQL recomendado (prod) |
+| **Auth** | JWT em cookie httpOnly + django-axes (brute-force) |
+| **Charts** | Recharts (dashboard de métricas admin) |
+| **E-mail** | SMTP Gmail (welcome + notificações de artigo) |
 
-## Expanding the ESLint configuration
+## Rodar localmente
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+**Pré-requisitos:** Node ≥ 20.19 (Vite 8), Python ≥ 3.12.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+```bash
+# 1. Clonar
+git clone git@github.com:GabeMarques-Intetsu/interpop.git
+cd interpop
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+# 2. Backend (terminal 1)
+cd backend
+python -m venv venv
+venv/bin/pip install -r requirements.txt
+cp .env.example .env  # ajustar SECRET_KEY, EMAIL_*, etc
+venv/bin/python manage.py migrate
+venv/bin/python manage.py createsuperuser
+venv/bin/python manage.py runserver  # http://127.0.0.1:8000
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+# 3. Frontend (terminal 2)
+npm install
+npm run dev  # http://localhost:5173
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Estrutura
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
 ```
+interpop/
+├── backend/                    # Django API
+│   ├── apps/
+│   │   ├── articles/           # Posts + categorias + signal de notify
+│   │   ├── audit/              # Middleware + endpoint de métricas
+│   │   ├── comments/           # Comentários + curtidas
+│   │   ├── moderation/         # Banimentos
+│   │   ├── newsletter/         # Inscrições + templates de e-mail
+│   │   └── users/              # Auth (JWT), permissões
+│   └── config/settings/        # base, development, production
+├── src/                        # React app
+│   ├── pages/                  # Home, Article, News, Admin, etc
+│   ├── components/             # UI compartilhada (NewsCard, Modal, ...)
+│   ├── services/               # Camada axios → Django
+│   ├── router/                 # Rotas + ScrollToHashOrTop
+│   └── utils/                  # Helpers puros (renderArticleBody, etc)
+├── docs/                       # ecossistema_ui_ux, dashboards, deploy
+│   └── Logos/                  # Variantes do logo (SVG + assinatura)
+└── AGENTS.md                   # Regras de UI/UX e convenções
+```
+
+## Convenções
+
+- **Lint/typecheck**: `npx tsc -b` deve sair com `exit 0` antes de qualquer push
+- **Commits AI** incluem `Co-Authored-By: Claude Opus 4.7 <noreply@anthropic.com>`
+- **Padrão UI/UX**: ver `AGENTS.md` (combina galerias, design systems, auditorias, Mobbin e CSS Stats)
+- **Padrão dashboards**: ver `docs/guia_referencias_dashboards.pdf` referenciado em `AGENTS.md`
+
+## Documentação adicional
+
+- [AGENTS.md](AGENTS.md) — regras de UI/UX e convenções do projeto
+- [docs/HOSTING-DEPLOY-PLAN.md](docs/HOSTING-DEPLOY-PLAN.md) — stack de hospedagem (Vercel + Fly.io + Neon + R2)
+- [docs/LOGO-TODO.md](docs/LOGO-TODO.md) — estado e pendências da identidade visual
+- [docs/DOCUMENTATION.md](docs/DOCUMENTATION.md) — documentação técnica geral
+
+## Licença
+
+A definir.
