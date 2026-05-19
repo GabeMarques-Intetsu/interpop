@@ -1,0 +1,32 @@
+.developed-by {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font-size: var(--text-xs);
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.45);
+  white-space: nowrap;
+}
+
+.developed-by__label {
+  letter-spacing: 0.02em;
+}
+
+.developed-by__link {
+  display: inline-flex;
+  align-items: center;
+  transition: opacity var(--t-fast);
+  border-radius: var(--radius-sm);
+}
+
+.developed-by__link:hover { opacity: 0.85; }
+
+.developed-by__logo {
+  height: 18px;
+  width: auto;
+  display: block;
+  opacity: 0.85;
+  transition: opacity var(--t-fast);
+}
+
+.developed-by:hover .developed-by__logo { opacity: 1; }

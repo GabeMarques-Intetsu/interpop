@@ -1,0 +1,126 @@
+/* ──────────────────────────────────────────────────────────────────────
+   Sobre — estilos compartilhados entre:
+     - .about-page    → wrapper da rota dedicada /sobre
+     - .about-content → corpo reutilizado em modal (auth footer)
+   ────────────────────────────────────────────────────────────────────── */
+
+/* ─── Página dedicada /sobre ─── */
+.about-page {
+  padding: var(--sp-12) 0 var(--sp-16);
+}
+
+.about-page__header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  margin-bottom: var(--sp-10);
+  padding-bottom: var(--sp-8);
+  border-bottom: 2px solid var(--clr-primary);
+}
+
+.about-page__eyebrow {
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--clr-primary);
+}
+
+.about-page__title {
+  font-family: var(--font-serif);
+  font-optical-sizing: auto;
+  font-size: clamp(2.25rem, 4.5vw, 3.25rem);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--clr-text);
+  max-width: 18ch;
+}
+
+.about-page__title em {
+  font-style: italic;
+  color: var(--clr-primary);
+}
+
+/* ─── Conteúdo reutilizável (página + modal) ─── */
+.about-content {
+  font-size: var(--text-base);
+  line-height: 1.65;
+  color: var(--clr-text);
+}
+
+.about-content__lede {
+  font-family: var(--font-serif);
+  font-optical-sizing: auto;
+  font-size: clamp(1.125rem, 1.8vw, 1.375rem);
+  line-height: 1.55;
+  color: var(--clr-muted);
+  max-width: 52ch;
+  margin-bottom: var(--sp-6);
+}
+
+.about-content__section {
+  margin: var(--sp-8) 0;
+}
+
+.about-content__section h3 {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 800;
+  letter-spacing: -0.015em;
+  color: var(--clr-text);
+  margin-bottom: var(--sp-3);
+}
+
+.about-content__section p {
+  font-size: var(--text-base);
+  line-height: 1.7;
+  color: var(--clr-text);
+  margin-bottom: var(--sp-3);
+  max-width: 65ch;
+}
+
+.about-content__pillars {
+  list-style: none;
+  display: grid;
+  gap: var(--sp-3);
+  padding: 0;
+}
+
+.about-content__pillars li {
+  padding: var(--sp-3) var(--sp-4);
+  border-left: 3px solid var(--clr-primary);
+  background: var(--clr-primary-50);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  font-size: var(--text-base);
+  line-height: 1.6;
+}
+
+.about-content__pillars strong {
+  color: var(--clr-primary);
+  font-weight: 700;
+}
+
+.about-content__cta {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-5);
+  margin-top: var(--sp-5);
+  flex-wrap: wrap;
+}
+
+.about-content__cta a {
+  color: inherit;
+}
+
+.about-content__contact-link {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--clr-primary);
+  transition: opacity var(--t-fast);
+}
+
+.about-content__contact-link:hover {
+  opacity: 0.8;
+}

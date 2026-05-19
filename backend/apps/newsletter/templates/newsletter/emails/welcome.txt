@@ -1,0 +1,19 @@
+Bem-vindo(a) ao Interpop.
+
+A partir de agora você vai receber nossas análises sobre cultura pop,
+mídia e disputas geopolíticas — sem ruído, sem clickbait.
+
+O que esperar:
+- Edições semanais com análises sobre Música, Moda, Cinema, Literatura
+  e Cultura Digital
+- Recomendações editoriais — leituras relevantes para contextualizar
+- Sem promoções, sem rastreamento de cliques
+
+Conheça o projeto:
+{{ site_url }}/sobre
+
+— Equipe Interpop
+
+---
+Você recebeu este e-mail porque se inscreveu na newsletter do Interpop.
+Cancelar inscrição: {{ unsubscribe_url }}

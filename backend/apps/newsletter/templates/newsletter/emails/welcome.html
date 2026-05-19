@@ -1,0 +1,44 @@
+{% extends "newsletter/emails/base.html" %}
+
+{% block title %}Bem-vindo(a) à newsletter do Interpop{% endblock %}
+
+{% block preheader %}
+Obrigado por se inscrever — análise crítica de Soft Power, direto na sua caixa de entrada.
+{% endblock %}
+
+{% block content %}
+  <h1 style="margin:0 0 16px 0;font-family:Georgia,'Times New Roman',serif;font-size:28px;font-weight:500;line-height:1.2;letter-spacing:-0.5px;color:#111827;" class="text-primary">
+    Bem-vindo(a) ao <em style="color:#19144c;">Interpop</em>.
+  </h1>
+
+  <p style="margin:0 0 24px 0;font-family:Helvetica,Arial,sans-serif;font-size:16px;line-height:1.65;color:#4B5563;" class="text-muted">
+    A partir de agora você vai receber nossas análises sobre cultura pop, mídia
+    e disputas geopolíticas — sem ruído, sem clickbait.
+  </p>
+
+  <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:0 0 28px 0;">
+    <tr>
+      <td style="padding:16px 20px;border-left:3px solid #19144c;background:#EEF0F8;border-radius:0 8px 8px 0;font-family:Helvetica,Arial,sans-serif;font-size:14px;line-height:1.6;color:#111827;" class="text-primary">
+        <strong style="color:#19144c;" class="text-primary">O que esperar:</strong><br>
+        &bull; Edições semanais com análises sobre Música, Moda, Cinema, Literatura e Cultura Digital<br>
+        &bull; Recomendações editoriais — leituras relevantes para contextualizar<br>
+        &bull; Sem promoções, sem rastreamento de cliques
+      </td>
+    </tr>
+  </table>
+
+  <!-- CTA -->
+  <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 12px 0;">
+    <tr>
+      <td style="border-radius:8px;background:#19144c;" align="center">
+        <a href="{{ site_url }}/sobre" style="display:inline-block;padding:14px 28px;font-family:Helvetica,Arial,sans-serif;font-size:15px;font-weight:600;color:#ffffff;text-decoration:none;border-radius:8px;">
+          Conheça o projeto →
+        </a>
+      </td>
+    </tr>
+  </table>
+
+  <p style="margin:24px 0 0 0;font-family:Helvetica,Arial,sans-serif;font-size:13px;line-height:1.6;color:#6B7280;" class="text-muted">
+    — Equipe Interpop
+  </p>
+{% endblock %}

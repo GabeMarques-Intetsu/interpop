@@ -1,0 +1,14 @@
+{% if article.category %}[{{ article.category.name|upper }}]
+{% endif %}
+{{ article.title }}
+
+Por {{ article.author.get_full_name|default:article.author.username }}{% if article.published_at %} · {{ article.published_at|date:"d \d\e F \d\e Y" }}{% endif %}
+
+{{ article.excerpt }}
+
+Continuar lendo:
+{{ article_url }}
+
+---
+Você recebeu este e-mail porque se inscreveu na newsletter do Interpop.
+Cancelar inscrição: {{ unsubscribe_url }}

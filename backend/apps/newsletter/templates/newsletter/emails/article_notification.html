@@ -1,0 +1,56 @@
+{% extends "newsletter/emails/base.html" %}
+
+{% block title %}{{ article.title }} — Interpop{% endblock %}
+
+{% block preheader %}
+{{ article.excerpt|truncatechars:140 }}
+{% endblock %}
+
+{% block content %}
+  {% if article.category %}
+    <p style="margin:0 0 16px 0;font-family:Helvetica,Arial,sans-serif;font-size:11px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#19144c;" class="text-primary">
+      {{ article.category.name }}
+    </p>
+  {% endif %}
+
+  <h1 style="margin:0 0 16px 0;font-family:Georgia,'Times New Roman',serif;font-size:30px;font-weight:500;line-height:1.15;letter-spacing:-0.5px;color:#111827;" class="text-primary">
+    {{ article.title }}
+  </h1>
+
+  <p style="margin:0 0 24px 0;font-family:Helvetica,Arial,sans-serif;font-size:13px;line-height:1.6;color:#6B7280;" class="text-muted">
+    Por {{ article.author.get_full_name|default:article.author.username }}
+    {% if article.published_at %} · {{ article.published_at|date:"d \d\e F \d\e Y" }}{% endif %}
+  </p>
+
+  {% if article.cover_image %}
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:0 0 24px 0;">
+      <tr>
+        <td style="border-radius:8px;overflow:hidden;">
+          <a href="{{ article_url }}" style="display:block;">
+            <img
+              src="{{ article.cover_image.url }}"
+              alt="{{ article.title }}"
+              width="520"
+              style="display:block;width:100%;max-width:520px;height:auto;border-radius:8px;"
+            />
+          </a>
+        </td>
+      </tr>
+    </table>
+  {% endif %}
+
+  <p style="margin:0 0 24px 0;font-family:Georgia,'Times New Roman',serif;font-size:17px;line-height:1.65;color:#111827;" class="text-primary">
+    {{ article.excerpt }}
+  </p>
+
+  <!-- CTA -->
+  <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:8px 0 0 0;">
+    <tr>
+      <td style="border-radius:8px;background:#19144c;" align="center">
+        <a href="{{ article_url }}" style="display:inline-block;padding:14px 28px;font-family:Helvetica,Arial,sans-serif;font-size:15px;font-weight:600;color:#ffffff;text-decoration:none;border-radius:8px;">
+          Continuar lendo →
+        </a>
+      </td>
+    </tr>
+  </table>
+{% endblock %}
