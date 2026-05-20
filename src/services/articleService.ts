@@ -34,17 +34,9 @@ export interface ApiArticle {
   updated_at?: string;
 }
 
-export interface ApiComment {
-  id: string;
-  author: {
-    id: string;
-    full_name: string;
-    avatar: string | null;
-    avatar_initial: string;
-  };
-  content: string;
-  created_at: string;
-}
+// ApiComment vive em commentService.ts (versão completa com replies, likes,
+// is_liked, etc.). Versão simplificada que existia aqui era dead code —
+// nada importava dela. Removida em F2 do Improvement-system.md §11.3.
 
 export interface ArticleWritePayload {
   title: string;
