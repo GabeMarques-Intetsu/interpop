@@ -33,7 +33,16 @@ api.interceptors.response.use(
     const original: InternalAxiosRequestConfig & { _retry?: boolean } =
       error.config ?? {};
 
-    if (error.response?.status !== 401 || original._retry) {
+    // O próprio refresh NÃO passa pelo fluxo de retry — senão entra em
+    // deadlock: o interceptor faz `await refreshing` enquanto está dentro
+    // do promise `refreshing`, e a Promise nunca resolve. Sintoma observado:
+    // me() pendurada para sempre, AuthContext.isLoading = true eterno,
+    // /perfil travado em "Carregando…" até o usuário ir manualmente em
+    // /login. Rejeita o erro imediatamente — o .catch() da chain de refresh
+    // (abaixo) faz o dispatch do auth:logout e propaga a rejeição.
+    const isRefreshRequest = original.url?.includes('/api/auth/refresh/');
+
+    if (error.response?.status !== 401 || original._retry || isRefreshRequest) {
       return Promise.reject(error);
     }
 
