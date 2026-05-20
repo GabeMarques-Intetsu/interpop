@@ -1,0 +1,14 @@
+node_modules
+dist
+dist-ssr
+package-lock.json
+LICENSE
+.husky
+
+# Backend Python — gerenciado pelo uv, fora do escopo do Prettier
+backend
+docs/*.pdf
+public
+
+# Lockfiles
+backend/uv.lock
