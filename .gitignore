@@ -31,6 +31,7 @@ backend/venv/
 *.pyo
 backend/.env
 backend/db.sqlite3
+backend/media/
 
 # Documentos internos de planejamento (não versionados)
 docs/Improvement-system.md
