@@ -1,3 +1,4 @@
+from django.core.cache import cache
 from django.db.models import Count, F, Q
 from django.utils import timezone
 from rest_framework import generics, status
@@ -13,6 +14,16 @@ from .serializers import (
     ArticleWriteSerializer,
     CategorySerializer,
 )
+
+
+def _client_ip(request) -> str:
+    """Extrai IP real respeitando X-Forwarded-For (nginx → gunicorn).
+    Em prod o Cloudflare também adiciona CF-Connecting-IP, mas X-Forwarded-For
+    do nginx já carrega isso. Em dev sem proxy, REMOTE_ADDR é direto."""
+    forwarded = request.META.get('HTTP_X_FORWARDED_FOR', '')
+    if forwarded:
+        return forwarded.split(',')[0].strip()
+    return request.META.get('REMOTE_ADDR', '0.0.0.0')
 
 
 class CategoryListView(generics.ListAPIView):
@@ -74,9 +85,35 @@ class ArticleDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 
 class ArticleViewCountView(APIView):
+    """Bump de view_count em artigo publicado, com bucket anti-abuse.
+
+    Bucket: 1 incremento por (slug, IP) a cada 5min. Resposta é sempre 204
+    — mesmo quando o bucket bloqueia — porque o frontend não precisa saber
+    se o view foi contado ou não (não afeta UX). Atacante que dispara
+    `curl POST` em loop não consegue inflar a métrica para o mesmo artigo
+    mais que 12×/hora a partir de um único IP.
+
+    Limitação conhecida (até A20 — Redis entrar): em produção com gunicorn
+    workers=3, cada worker tem seu próprio LocMemCache → mesmo IP pode
+    atingir até 3 buckets distintos = ~36×/hora. Aceitável como melhoria
+    intermediária; resolve quando o cache for compartilhado via Redis.
+
+    Item C4 do Improvement-system.md §11.1.
+    """
     permission_classes = [AllowAny]
 
+    BUCKET_TTL = 300  # 5 minutos
+
     def post(self, request, slug):
+        bucket_key = f'view_count:{slug}:{_client_ip(request)}'
+        if cache.get(bucket_key):
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+        # `add` é atômico (returns False se key já existe), evita race entre
+        # duas requests simultâneas do mesmo IP que ambas passariam no get().
+        if not cache.add(bucket_key, True, timeout=self.BUCKET_TTL):
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
         Article.objects.filter(slug=slug, status='published').update(
             view_count=F('view_count') + 1
         )

@@ -220,6 +220,20 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024
 FILE_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024
 
+# ── Cache ──────────────────────────────────────────────────────────────────────
+# LocMemCache é per-process: cada worker do gunicorn tem sua própria cópia.
+# Adequado para dev e para anti-abuse leve (view_count bucket, og_middleware).
+# Quando o Redis entrar como dependência operacional (A20 do Improvement-system
+# §11.2 — setup Celery+Redis), `production.py` deve fazer override para
+# `django_redis.cache.RedisCache` com LOCATION apontando para o broker local.
+CACHES = {
+    'default': {
+        'BACKEND':  'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'interpop-locmem',
+        'TIMEOUT':  300,  # 5 min default
+    },
+}
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # ── Security headers (production) ────────────────────────────────────────────────
