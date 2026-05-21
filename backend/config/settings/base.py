@@ -58,6 +58,11 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    # RequestID: gera UUID por request + popula contextvars (request_id,
+    # user_id) lidos pelo RequestContextFilter em apps.audit.logging.
+    # Roda APÓS Authentication (precisa ler request.user) e ANTES de
+    # AuditLog (pra que AuditLog use o mesmo request.id).
+    'apps.audit.middleware.RequestIDMiddleware',
     'axes.middleware.AxesMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -241,3 +246,52 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = 'DENY'
 SECURE_REFERRER_POLICY = 'strict-origin-when-cross-origin'
+
+# ── Logging (A27 do Improvement-system §11.2) ────────────────────────────────────
+# Em dev: formato legível tipo `[2026-05-21 00:35] INFO interpop.foo [req=abc123
+# user=42]: mensagem`. Em prod: JSON único por linha pra Loki/journald/Sentry
+# parsearem sem ambiguidade. Toda linha carrega request_id e user_id injetados
+# pelo RequestContextFilter (lê contextvars do RequestIDMiddleware).
+#
+# Roots:
+# - root: INFO em prod, INFO em dev (DEBUG seria poluição em dev quando o
+#   Django runserver mostra tudo no terminal).
+# - django.request: WARNING+ — silencia o ruído de 200 OK rotineiro.
+# - django.security: INFO+ — capturar tentativas de bruteforce, CSRF fail, etc.
+# - interpop: app code com prefixo 'interpop.' usa DEBUG em dev, INFO em prod.
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'filters': {
+        'request_context': {
+            '()': 'apps.audit.logging.RequestContextFilter',
+        },
+    },
+    'formatters': {
+        'json': {
+            '()': 'pythonjsonlogger.json.JsonFormatter',
+            'fmt': '%(asctime)s %(levelname)s %(name)s %(message)s %(request_id)s %(user_id)s',
+            'datefmt': '%Y-%m-%dT%H:%M:%S%z',
+        },
+        'verbose': {
+            'format': '[{asctime}] {levelname} {name} [req={request_id} user={user_id}]: {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose' if DEBUG else 'json',
+            'filters': ['request_context'],
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO',
+    },
+    'loggers': {
+        'django.request':  {'level': 'WARNING', 'handlers': ['console'], 'propagate': False},
+        'django.security': {'level': 'INFO',    'handlers': ['console'], 'propagate': False},
+        'interpop':        {'level': 'DEBUG' if DEBUG else 'INFO', 'handlers': ['console'], 'propagate': False},
+    },
+}
