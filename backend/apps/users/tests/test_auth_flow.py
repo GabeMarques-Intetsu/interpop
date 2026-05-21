@@ -21,11 +21,11 @@ from rest_framework_simplejwt.tokens import RefreshToken
 REFRESH_COOKIE = 'refresh_token'
 ACCESS_COOKIE  = 'access_token'
 
-LOGIN_URL    = '/api/auth/login/'
-LOGOUT_URL   = '/api/auth/logout/'
-ME_URL       = '/api/auth/me/'
-REFRESH_URL  = '/api/auth/refresh/'
-REGISTER_URL = '/api/auth/register/'
+LOGIN_URL    = '/api/v1/auth/login/'
+LOGOUT_URL   = '/api/v1/auth/logout/'
+ME_URL       = '/api/v1/auth/me/'
+REFRESH_URL  = '/api/v1/auth/refresh/'
+REGISTER_URL = '/api/v1/auth/register/'
 
 
 # ── Login ─────────────────────────────────────────────────────────────────────

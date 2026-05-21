@@ -14,7 +14,7 @@ export interface ApiArticle {
   body?: string;
   cover_image: string | null;
   /** Legenda da capa (G1-style: "Pessoa — Foto: Agência"). Só vem na detail
-   *  view (`GET /api/articles/<slug>/`), não na listagem — evita inflar payload. */
+   *  view (`GET /api/v1/articles/<slug>/`), não na listagem — evita inflar payload. */
   cover_caption?: string;
   author: {
     id: string;
@@ -51,7 +51,7 @@ export interface ArticleWritePayload {
 
 // ── Cache de categorias ───────────────────────────────────────────────
 // Categorias mudam muito raramente (admin Django). Em vez de cada página
-// (News, CreatePost) refazer GET /api/categories/ a cada montagem, mantemos
+// (News, CreatePost) refazer GET /api/v1/categories/ a cada montagem, mantemos
 // um cache in-module simples. Primeira chamada → request real; chamadas
 // subsequentes → resolvem com o array em memória.
 let _categoriesCache: ApiCategory[] | null = null;
@@ -65,18 +65,18 @@ export function invalidateCategoriesCache(): void {
 
 const articleService = {
   list: (params?: Record<string, string>) =>
-    api.get<{ results: ApiArticle[]; count: number }>('/api/articles/', {
+    api.get<{ results: ApiArticle[]; count: number }>('/api/v1/articles/', {
       params,
     }),
 
-  get: (slug: string) => api.get<ApiArticle>(`/api/articles/${slug}/`),
+  get: (slug: string) => api.get<ApiArticle>(`/api/v1/articles/${slug}/`),
 
   create: (payload: ArticleWritePayload) => {
     const form = new FormData();
     Object.entries(payload).forEach(([k, v]) => {
       if (v !== undefined && v !== null) form.append(k, v as string | Blob);
     });
-    return api.post<ApiArticle>('/api/articles/', form, {
+    return api.post<ApiArticle>('/api/v1/articles/', form, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
   },
@@ -86,17 +86,17 @@ const articleService = {
     Object.entries(payload).forEach(([k, v]) => {
       if (v !== undefined && v !== null) form.append(k, v as string | Blob);
     });
-    return api.patch<ApiArticle>(`/api/articles/${slug}/`, form, {
+    return api.patch<ApiArticle>(`/api/v1/articles/${slug}/`, form, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
   },
 
-  remove: (slug: string) => api.delete(`/api/articles/${slug}/`),
+  remove: (slug: string) => api.delete(`/api/v1/articles/${slug}/`),
 
-  recordView: (slug: string) => api.post(`/api/articles/${slug}/view/`),
+  recordView: (slug: string) => api.post(`/api/v1/articles/${slug}/view/`),
 
   listCategories: () =>
-    api.get<{ results: ApiCategory[]; count: number }>('/api/categories/'),
+    api.get<{ results: ApiCategory[]; count: number }>('/api/v1/categories/'),
 
   /** Versão cacheada — usar nas páginas que só precisam do array de categorias.
    *  Primeira chamada faz request, subsequentes resolvem com o cache em memória.
@@ -105,7 +105,7 @@ const articleService = {
     if (_categoriesCache) return Promise.resolve(_categoriesCache);
     if (_categoriesPromise) return _categoriesPromise;
     _categoriesPromise = api
-      .get<{ results: ApiCategory[]; count: number }>('/api/categories/')
+      .get<{ results: ApiCategory[]; count: number }>('/api/v1/categories/')
       .then((r) => {
         _categoriesCache = r.data.results;
         return _categoriesCache;

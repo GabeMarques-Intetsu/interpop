@@ -28,21 +28,21 @@ export interface ApiPaginatedComments {
 
 const commentService = {
   list: (slug: string, params?: Record<string, string>) =>
-    api.get<ApiPaginatedComments>(`/api/articles/${slug}/comments/`, {
+    api.get<ApiPaginatedComments>(`/api/v1/articles/${slug}/comments/`, {
       params,
     }),
 
   add: (slug: string, content: string, parent_id?: string) =>
-    api.post<ApiComment>(`/api/articles/${slug}/comments/`, {
+    api.post<ApiComment>(`/api/v1/articles/${slug}/comments/`, {
       content,
       ...(parent_id ? { parent_id } : {}),
     }),
 
-  remove: (id: string) => api.delete(`/api/comments/${id}/`),
+  remove: (id: string) => api.delete(`/api/v1/comments/${id}/`),
 
   toggleLike: (id: string) =>
     api.post<{ liked: boolean; likes_count: number }>(
-      `/api/comments/${id}/like/`,
+      `/api/v1/comments/${id}/like/`,
     ),
 };
 

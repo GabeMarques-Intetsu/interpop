@@ -43,7 +43,7 @@ def _set_auth_cookies(response: Response, refresh: RefreshToken) -> None:
         **cookie_kwargs,
     )
     # Restrict refresh cookie to only the refresh endpoint
-    refresh_kwargs = {**cookie_kwargs, 'path': '/api/auth/refresh/'}
+    refresh_kwargs = {**cookie_kwargs, 'path': '/api/v1/auth/refresh/'}
     response.set_cookie(
         key=s.get('AUTH_COOKIE_REFRESH', 'refresh_token'),
         value=refresh_str,
@@ -57,7 +57,7 @@ def _clear_auth_cookies(response: Response) -> None:
     response.delete_cookie(s.get('AUTH_COOKIE', 'access_token'))
     response.delete_cookie(
         s.get('AUTH_COOKIE_REFRESH', 'refresh_token'),
-        path='/api/auth/refresh/',
+        path='/api/v1/auth/refresh/',
     )
 
 

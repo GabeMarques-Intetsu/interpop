@@ -5,7 +5,7 @@
  *  - Credentials (JWT httpOnly cookies) are sent on every request.
  *  - CSRF cookie is read automatically by axios (xsrfCookieName) and forwarded
  *    as a header (xsrfHeaderName) — matches Django's CsrfViewMiddleware.
- *  - On 401 the interceptor calls /api/auth/refresh/ once, then retries.
+ *  - On 401 the interceptor calls /api/v1/auth/refresh/ once, then retries.
  *    A second 401 triggers a forced logout so stale state never persists.
  */
 import axios, {
@@ -40,7 +40,7 @@ api.interceptors.response.use(
     // /perfil travado em "Carregando…" até o usuário ir manualmente em
     // /login. Rejeita o erro imediatamente — o .catch() da chain de refresh
     // (abaixo) faz o dispatch do auth:logout e propaga a rejeição.
-    const isRefreshRequest = original.url?.includes('/api/auth/refresh/');
+    const isRefreshRequest = original.url?.includes('/api/v1/auth/refresh/');
 
     if (error.response?.status !== 401 || original._retry || isRefreshRequest) {
       return Promise.reject(error);
@@ -50,7 +50,7 @@ api.interceptors.response.use(
 
     if (!refreshing) {
       refreshing = api
-        .post('/api/auth/refresh/')
+        .post('/api/v1/auth/refresh/')
         .then(() => {
           refreshing = null;
         })

@@ -9,7 +9,7 @@ from .models import AuditLog
 logger = logging.getLogger(__name__)
 
 _WRITE_METHODS = frozenset({'POST', 'PUT', 'PATCH', 'DELETE'})
-_SKIP_PATHS    = frozenset({'/api/auth/refresh/', '/admin/'})
+_SKIP_PATHS    = frozenset({'/api/v1/auth/refresh/', '/admin/'})
 
 
 def _get_ip(request) -> str | None:

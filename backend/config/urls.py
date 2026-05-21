@@ -15,12 +15,20 @@ urlpatterns = [
     path('sitemap.xml', sitemap_xml, name='sitemap-xml'),
     path('robots.txt',  robots_txt,  name='robots-txt'),
 
-    path('api/auth/', include('apps.users.urls')),
-    path('api/', include('apps.articles.urls')),
-    path('api/', include('apps.comments.urls')),
-    path('api/', include('apps.moderation.urls')),
-    path('api/', include('apps.newsletter.urls')),
-    path('api/', include('apps.audit.urls')),
+    # API v1 — todos os endpoints da aplicação ficam sob /api/v1/.
+    # Decisão formalizada em ADR-010 do Improvement-system.md §11.0.
+    # Versioning desde o dia 1 evita migração coordenada dolorosa quando
+    # houver primeira breaking change (mudança de shape de payload,
+    # renomeação de campo, paginação diferente). Custo de adicionar agora:
+    # ~1h. Custo depois com produção rodando: dias + downtime.
+    # NUNCA criar /api/v2/ antes de ter /api/v1/ deprecado anunciado com
+    # 90 dias de antecedência no header `Sunset` + página de migração.
+    path('api/v1/auth/', include('apps.users.urls')),
+    path('api/v1/', include('apps.articles.urls')),
+    path('api/v1/', include('apps.comments.urls')),
+    path('api/v1/', include('apps.moderation.urls')),
+    path('api/v1/', include('apps.newsletter.urls')),
+    path('api/v1/', include('apps.audit.urls')),
 ]
 
 if settings.DEBUG:

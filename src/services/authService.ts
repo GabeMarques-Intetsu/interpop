@@ -32,14 +32,14 @@ export interface RegisterPayload {
 
 export const authService = {
   login: (payload: LoginPayload) =>
-    api.post<ApiUser>('/api/auth/login/', payload),
+    api.post<ApiUser>('/api/v1/auth/login/', payload),
 
-  logout: () => api.post('/api/auth/logout/'),
+  logout: () => api.post('/api/v1/auth/logout/'),
 
   register: (payload: RegisterPayload) =>
-    api.post<ApiUser>('/api/auth/register/', payload),
+    api.post<ApiUser>('/api/v1/auth/register/', payload),
 
-  me: () => api.get<ApiUser>('/api/auth/me/'),
+  me: () => api.get<ApiUser>('/api/v1/auth/me/'),
 
   /** PATCH parcial. Backend aceita: first_name, last_name, bio, avatar.
    *  `email` e `username` NÃO são editáveis aqui — exigem fluxo separado
@@ -60,21 +60,21 @@ export const authService = {
           fd.append(k, v as string | Blob);
         }
       });
-      return api.patch<ApiUser>('/api/auth/me/', fd, {
+      return api.patch<ApiUser>('/api/v1/auth/me/', fd, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
     }
-    return api.patch<ApiUser>('/api/auth/me/', payload);
+    return api.patch<ApiUser>('/api/v1/auth/me/', payload);
   },
 
   changePassword: (old_password: string, new_password: string) =>
-    api.post('/api/auth/me/password/', { old_password, new_password }),
+    api.post('/api/v1/auth/me/password/', { old_password, new_password }),
 
   requestPasswordReset: (email: string) =>
-    api.post<{ detail: string }>('/api/auth/password-reset/', { email }),
+    api.post<{ detail: string }>('/api/v1/auth/password-reset/', { email }),
 
   confirmPasswordReset: (token: string, new_password: string) =>
-    api.post<{ detail: string }>('/api/auth/password-reset/confirm/', {
+    api.post<{ detail: string }>('/api/v1/auth/password-reset/confirm/', {
       token,
       new_password,
     }),

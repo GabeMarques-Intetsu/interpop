@@ -41,8 +41,8 @@ def test_issue_tokens_sets_both_cookies(reader_user):
     # Cookies httpOnly + secure (defesa em profundidade contra XSS hijack)
     assert response.cookies[ACCESS_COOKIE_NAME]['httponly']
     assert response.cookies[REFRESH_COOKIE_NAME]['httponly']
-    # Refresh cookie restrito ao endpoint /api/auth/refresh/
-    assert response.cookies[REFRESH_COOKIE_NAME]['path'] == '/api/auth/refresh/'
+    # Refresh cookie restrito ao endpoint /api/v1/auth/refresh/
+    assert response.cookies[REFRESH_COOKIE_NAME]['path'] == '/api/v1/auth/refresh/'
 
 
 # ── rotate_refresh_token (C1 regression) ──────────────────────────────────────
@@ -59,7 +59,7 @@ def test_rotate_refresh_token_returns_true_for_valid_cookie(reader_user):
 
     # Simula request com o cookie
     factory = RequestFactory()
-    request = factory.post('/api/auth/refresh/')
+    request = factory.post('/api/v1/auth/refresh/')
     request.COOKIES[REFRESH_COOKIE_NAME] = raw_refresh
 
     response = Response()
@@ -83,7 +83,7 @@ def test_rotate_refresh_token_blacklists_old_token(reader_user):
     raw_refresh = str(refresh)
 
     factory = RequestFactory()
-    request = factory.post('/api/auth/refresh/')
+    request = factory.post('/api/v1/auth/refresh/')
     request.COOKIES[REFRESH_COOKIE_NAME] = raw_refresh
 
     rotate_refresh_token(request, Response())
@@ -95,13 +95,13 @@ def test_rotate_refresh_token_blacklists_old_token(reader_user):
 
 def test_rotate_refresh_token_returns_false_for_missing_cookie():
     factory = RequestFactory()
-    request = factory.post('/api/auth/refresh/')
+    request = factory.post('/api/v1/auth/refresh/')
     assert rotate_refresh_token(request, Response()) is False
 
 
 def test_rotate_refresh_token_returns_false_for_garbage_cookie():
     factory = RequestFactory()
-    request = factory.post('/api/auth/refresh/')
+    request = factory.post('/api/v1/auth/refresh/')
     request.COOKIES[REFRESH_COOKIE_NAME] = 'not.a.jwt.at.all'
     assert rotate_refresh_token(request, Response()) is False
 
@@ -115,7 +115,7 @@ def test_rotate_refresh_token_returns_false_when_user_deleted(reader_user):
     reader_user.delete()
 
     factory = RequestFactory()
-    request = factory.post('/api/auth/refresh/')
+    request = factory.post('/api/v1/auth/refresh/')
     request.COOKIES[REFRESH_COOKIE_NAME] = raw_refresh
 
     assert rotate_refresh_token(request, Response()) is False
@@ -131,7 +131,7 @@ def test_logout_user_blacklists_token_and_clears_cookies(reader_user):
     raw_refresh = str(refresh)
 
     factory = RequestFactory()
-    request = factory.post('/api/auth/logout/')
+    request = factory.post('/api/v1/auth/logout/')
     request.COOKIES[REFRESH_COOKIE_NAME] = raw_refresh
 
     response = Response()
@@ -147,7 +147,7 @@ def test_logout_user_silent_on_invalid_token():
     """Double-logout cenário: 2ª chamada com token já blacklistado não pode
     levantar 500 — cleared cookies anyway."""
     factory = RequestFactory()
-    request = factory.post('/api/auth/logout/')
+    request = factory.post('/api/v1/auth/logout/')
     request.COOKIES[REFRESH_COOKIE_NAME] = 'invalid.token.data'
 
     response = Response()

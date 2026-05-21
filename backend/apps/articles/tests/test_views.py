@@ -21,12 +21,7 @@ from unittest.mock import patch
 from apps.articles.models import Article, Category
 
 
-ARTICLES_URL = '/api/v1/articles/'  # backend já mantém /api/ — see below
-
-# NOTA: estes testes batem em /api/articles/ porque ADR-010 ainda não
-# foi aplicado (planejado pra próximo PR coordenado backend+frontend).
-# Quando ADR-010 fechar, atualizar URLs aqui de uma vez.
-ARTICLES_URL = '/api/articles/'
+ARTICLES_URL = '/api/v1/articles/'  # ADR-010 aplicado
 
 
 # ── Fixtures locais ───────────────────────────────────────────────────────────
@@ -143,7 +138,7 @@ def test_editor_can_update_own_article(
     art = make_article(editor_user, title='Mine')
     client = authed_client_factory(editor_user)
     resp = client.patch(
-        f'/api/articles/{art.slug}/',
+        f'/api/v1/articles/{art.slug}/',
         data={'title': 'Mine Updated'},
         format='json',
     )
@@ -174,7 +169,7 @@ def test_editor_cannot_update_other_editors_article(
 
     client = authed_client_factory(editor_user)
     resp = client.patch(
-        f'/api/articles/{art.slug}/',
+        f'/api/v1/articles/{art.slug}/',
         data={'title': 'Edit by other editor'},
         format='json',
     )
@@ -189,7 +184,7 @@ def test_admin_can_update_any_article(
     art = make_article(editor_user, title='Editor Article')
     client = authed_client_factory(admin_user)
     resp = client.patch(
-        f'/api/articles/{art.slug}/',
+        f'/api/v1/articles/{art.slug}/',
         data={'title': 'Admin Edit'},
         format='json',
     )
@@ -207,7 +202,7 @@ def test_view_count_incremented_once_per_5min_window(
     art = make_article(editor_user, status='published', title='Viewed')
     assert art.view_count == 0
 
-    url = f'/api/articles/{art.slug}/view/'
+    url = f'/api/v1/articles/{art.slug}/view/'
     r1 = client.post(url)
     r2 = client.post(url)
     r3 = client.post(url)
@@ -231,8 +226,8 @@ def test_view_count_different_slugs_independent(
     a = make_article(editor_user, title='Article A', slug='article-a')
     b = make_article(editor_user, title='Article B', slug='article-b')
 
-    client.post(f'/api/articles/{a.slug}/view/')
-    client.post(f'/api/articles/{b.slug}/view/')
+    client.post(f'/api/v1/articles/{a.slug}/view/')
+    client.post(f'/api/v1/articles/{b.slug}/view/')
 
     a.refresh_from_db()
     b.refresh_from_db()
@@ -245,7 +240,7 @@ def test_view_count_unpublished_article_not_incremented(
 ):
     """Draft não conta view — só published (filtro no .update())."""
     art = make_article(editor_user, status='draft', title='Draft')
-    client.post(f'/api/articles/{art.slug}/view/')
+    client.post(f'/api/v1/articles/{art.slug}/view/')
     art.refresh_from_db()
     assert art.view_count == 0
 

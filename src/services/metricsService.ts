@@ -60,7 +60,7 @@ export interface AdminMetricsResponse {
 
 const metricsService = {
   get: (period: MetricsPeriod = 'week') =>
-    api.get<AdminMetricsResponse>('/api/admin/metrics/', {
+    api.get<AdminMetricsResponse>('/api/v1/admin/metrics/', {
       params: { period },
     }),
 };
