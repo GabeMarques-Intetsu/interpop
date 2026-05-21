@@ -146,8 +146,13 @@ export function Footer() {
       </div>
 
       <div className="footer__bottom container">
-        <Link to="/" className="footer__logo" aria-label="Interpop">
-          <img src={interpopLogo} alt="Interpop" />
+        <Link
+          to="/"
+          className="footer__logo"
+          aria-label="Interpop — voltar ao início"
+        >
+          {/* alt="" porque o <Link> pai já tem aria-label. WAVE Redundant alt. */}
+          <img src={interpopLogo} alt="" />
         </Link>
         <p className="footer__copy">
           © {new Date().getFullYear()} Interpop. Todos os direitos reservados.

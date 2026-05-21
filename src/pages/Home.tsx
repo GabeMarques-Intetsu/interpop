@@ -97,7 +97,15 @@ export function Home() {
         <div className="container">
           <div className="home-news__header">
             <h2 id="news-heading">Últimas Notícias</h2>
-            <Link to="/noticias" className="home-news__see-all">
+            {/* aria-label diferente do botão "Ver todas as notícias" abaixo
+                — ambos apontam pra /noticias mas WAVE flagga como Redundant
+                link se accessible name for igual. Texto visual fica curto pra
+                o header, leitor de tela ouve o contexto da seção. */}
+            <Link
+              to="/noticias"
+              className="home-news__see-all"
+              aria-label="Ver todas as notícias do header"
+            >
               Ver todas →
             </Link>
           </div>

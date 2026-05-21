@@ -41,7 +41,10 @@ export function Navbar() {
           className="navbar__logo"
           aria-label="Interpop — Página inicial"
         >
-          <img src={interpopLogo} alt="Interpop" className="navbar__logo-img" />
+          {/* alt="" porque o <Link> pai já tem aria-label="Interpop — Página
+              inicial". Imagem dentro de link com label deve ser decorativa pra
+              leitor de tela não anunciar 2x. WAVE Redundant alt. */}
+          <img src={interpopLogo} alt="" className="navbar__logo-img" />
         </Link>
 
         <nav className="navbar__nav" aria-label="Navegação principal">

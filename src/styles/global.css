@@ -29,7 +29,7 @@
   --clr-border: #e8eaed;
   --clr-text: #111827;
   --clr-muted: #4b5563;
-  --clr-subtle: #6b7280;
+  --clr-subtle: #5b6270; /* U5 §11.4: 4.69:1 → 5.21:1 em branco (folga AA) */
 
   /* Semantic */
   --clr-success: #059669;
