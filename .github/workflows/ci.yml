@@ -1,0 +1,100 @@
+# Interpop CI — gate de merge para PRs em develop e main.
+#
+# Filosofia (alinha com Improvement-system.md §12.2):
+# - DORA nível 2 (Sprint 1): merge bloqueado se testes vermelhos.
+# - Cobertura evolutiva: 40% Sprint 1 → 80% pós-Sprint 4.
+# - Falha rápida: jobs paralelos (backend, frontend, security) com
+#   cancel-in-progress, sem cascata desnecessária.
+# - Sem deploy aqui — deploy é outro workflow (.github/workflows/deploy.yml,
+#   gated em push pra main com environment=production).
+
+name: CI
+
+on:
+  pull_request:
+    branches: [develop, main]
+  push:
+    branches: [develop, main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  backend:
+    name: Backend (pytest + cov ≥40%)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      DJANGO_SETTINGS_MODULE: config.settings.development
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup uv (Python toolchain do projeto)
+        uses: astral-sh/setup-uv@v3
+        with:
+          version: 'latest'
+          enable-cache: true
+          cache-dependency-glob: 'backend/uv.lock'
+
+      - name: Install Python + deps (locked)
+        run: uv sync --frozen --dev
+
+      - name: Django system check
+        run: uv run python manage.py check --deploy --fail-level WARNING || true
+        # --fail-level WARNING não falha o build hoje (settings dev tem
+        # SECURE_SSL_REDIRECT=False, etc. — esperado). Quando production.py
+        # virar baseline do CI, virar `--fail-level ERROR` sem `|| true`.
+
+      - name: pytest + cov gate
+        run: uv run pytest --cov=apps --cov-report=xml --cov-report=term --cov-fail-under=40
+
+      - name: Upload coverage XML (artifact pra futura integração Codecov)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-coverage-${{ github.sha }}
+          path: backend/coverage.xml
+          retention-days: 14
+
+  frontend:
+    name: Frontend (tsc + eslint + build)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install deps (locked)
+        run: npm ci
+
+      - name: Typecheck
+        run: npx tsc --noEmit
+
+      - name: Lint
+        run: npm run lint:check
+
+      - name: Prettier format check
+        run: npm run check-format
+
+      - name: Build
+        run: npm run build
+
+      - name: Upload dist (artifact para inspeção visual de bundle size)
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-dist-${{ github.sha }}
+          path: dist
+          retention-days: 7
+
+  # Security scan ficará em workflow separado quando S15-S17 entrarem
+  # (gitleaks + pip-audit + npm audit + bandit + semgrep). Hoje ainda não.
