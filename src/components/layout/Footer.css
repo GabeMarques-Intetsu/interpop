@@ -54,7 +54,8 @@
 }
 
 .footer__newsletter-form input::placeholder {
-  color: rgba(255, 255, 255, 0.4);
+  /* alpha 0.85 → ratio 8.42:1 sobre navy (era 0.4 = 3.76:1 — fail AA) */
+  color: rgba(255, 255, 255, 0.85);
 }
 .footer__newsletter-form input:focus {
   border-color: rgba(255, 255, 255, 0.5);
@@ -73,7 +74,8 @@
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.5);
+  /* alpha 0.85 sobre navy (era 0.5 = 4.45:1 — borderline AA) */
+  color: rgba(255, 255, 255, 0.85);
   margin-bottom: var(--sp-4);
 }
 
@@ -121,7 +123,8 @@
 
 .footer__copy {
   font-size: var(--text-xs);
-  color: rgba(255, 255, 255, 0.4);
+  /* alpha 0.85 sobre navy (era 0.4 = 3.76:1 — fail AA) */
+  color: rgba(255, 255, 255, 0.85);
   flex: 1;
   text-align: center;
 }
@@ -133,7 +136,8 @@
 
 .footer__legal a {
   font-size: var(--text-xs);
-  color: rgba(255, 255, 255, 0.4);
+  /* alpha 0.85 sobre navy (era 0.4 = 3.76:1 — fail AA) */
+  color: rgba(255, 255, 255, 0.85);
   transition: color var(--t-fast);
 }
 

@@ -4,7 +4,8 @@
   gap: var(--sp-2);
   font-size: var(--text-xs);
   line-height: 1;
-  color: rgba(255, 255, 255, 0.45);
+  /* alpha 0.85 sobre navy (era 0.45 = 4.45:1 — fail AA por 0.05) */
+  color: rgba(255, 255, 255, 0.85);
   white-space: nowrap;
 }
 

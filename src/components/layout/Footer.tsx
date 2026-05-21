@@ -15,6 +15,11 @@ type LinkSpec = {
   to: string;
   /** External link (mailto: or http) — rendered as plain <a>. */
   external?: boolean;
+  /** Opcional: aria-label distinto do texto visível.
+   *  Usado quando o mesmo destino aparece em outro lugar da página (ex.:
+   *  Entrar/Criar conta também ficam no Navbar) — WAVE flagga como
+   *  "Redundant link" se accessible name + href forem idênticos. */
+  ariaLabel?: string;
 };
 
 const NAV_COLUMNS: { heading: string; links: LinkSpec[] }[] = [
@@ -52,8 +57,12 @@ const NAV_COLUMNS: { heading: string; links: LinkSpec[] }[] = [
   {
     heading: 'Conta',
     links: [
-      { label: 'Entrar', to: '/login' },
-      { label: 'Criar conta', to: '/cadastro' },
+      { label: 'Entrar', to: '/login', ariaLabel: 'Entrar — link do rodapé' },
+      {
+        label: 'Criar conta',
+        to: '/cadastro',
+        ariaLabel: 'Criar conta — link do rodapé',
+      },
       { label: 'Recuperar senha', to: '/recuperar-senha' },
     ],
   },
@@ -133,9 +142,13 @@ export function Footer() {
                 {col.links.map((l) => (
                   <li key={l.label}>
                     {l.external ? (
-                      <a href={l.to}>{l.label}</a>
+                      <a href={l.to} aria-label={l.ariaLabel}>
+                        {l.label}
+                      </a>
                     ) : (
-                      <Link to={l.to}>{l.label}</Link>
+                      <Link to={l.to} aria-label={l.ariaLabel}>
+                        {l.label}
+                      </Link>
                     )}
                   </li>
                 ))}
