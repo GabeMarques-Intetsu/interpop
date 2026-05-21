@@ -121,8 +121,15 @@ AUTHENTICATION_BACKENDS = [
 # ── JWT / Cookie auth ────────────────────────────────────────────────────────────
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    # TTLs calibradas para perfil editorial — alinhadas com Substack/Medium/NYT.
+    # Access curto (30min) limita blast radius de token vazado; rotation
+    # silenciosa pelo interceptor axios deixa a UX invisível. Refresh longo
+    # (30 dias) reduz fricção pro leitor que volta com cadência variável —
+    # KPI editorial é retenção, não segurança bancária.
+    # Anteriormente: 15min + 7d (herança de setup fintech-default,
+    # conservador demais pro produto). Ajustado 2026-05-21.
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=30),
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
     'UPDATE_LAST_LOGIN': True,
