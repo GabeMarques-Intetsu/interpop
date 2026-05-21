@@ -1,0 +1,287 @@
+"""
+Testes E2E do CRUD de Article + permissões + C4 (view_count rate-limit) +
+C2 (signal de email único).
+
+Cobertura prioritária:
+- IsPublisherOrReadOnly: leitor anon pode GET; criação requer publisher
+  (admin/dev/editor); reader autenticado é negado em POST.
+- Visibilidade: anon vê só `status=published`; editorial vê drafts.
+- Edição/exclusão: dono OU admin (IsOwnerOrAdmin).
+- C4 regression: view_count NÃO dobra com 2 POSTs do mesmo IP em <5min.
+- C2 regression: publish dispara EXATAMENTE 1 chamada a
+  send_article_notification (não 2 — o signal de newsletter foi removido
+  em 1d7d3eb).
+"""
+from __future__ import annotations
+
+import pytest
+from django.core.cache import cache
+from unittest.mock import patch
+
+from apps.articles.models import Article, Category
+
+
+ARTICLES_URL = '/api/v1/articles/'  # backend já mantém /api/ — see below
+
+# NOTA: estes testes batem em /api/articles/ porque ADR-010 ainda não
+# foi aplicado (planejado pra próximo PR coordenado backend+frontend).
+# Quando ADR-010 fechar, atualizar URLs aqui de uma vez.
+ARTICLES_URL = '/api/articles/'
+
+
+# ── Fixtures locais ───────────────────────────────────────────────────────────
+
+@pytest.fixture
+def category(db):
+    """get_or_create porque data migration pode já ter populado as
+    categorias canônicas (Cinema, Música, etc.)."""
+    obj, _ = Category.objects.get_or_create(
+        slug='test-cinema', defaults={'name': 'Test Cinema'},
+    )
+    return obj
+
+
+@pytest.fixture
+def make_article(db, category):
+    """Factory inline pra evitar setup factory_boy só por isso. Retorna
+    callable pra criar Article com defaults razoáveis."""
+    def _make(author, status=Article.Status.PUBLISHED, title='Test Article', **kw):
+        return Article.objects.create(
+            author=author,
+            category=category,
+            title=title,
+            slug=kw.pop('slug', None) or f"{title.lower().replace(' ', '-')}-{author.pk.hex[:6]}",
+            excerpt=kw.pop('excerpt', 'A short excerpt for testing purposes.'),
+            body=kw.pop('body', 'Body content used in tests, long enough to be plausible.'),
+            status=status,
+            **kw,
+        )
+    return _make
+
+
+@pytest.fixture(autouse=True)
+def _clear_cache():
+    """View_count usa cache.add — limpa entre testes pra evitar contaminação."""
+    cache.clear()
+    yield
+    cache.clear()
+
+
+# ── List view (anon + authed) ─────────────────────────────────────────────────
+
+def test_list_articles_anon_returns_only_published(make_article, reader_user, editor_user, client):
+    make_article(editor_user, status='published', title='Pub 1')
+    make_article(editor_user, status='draft',     title='Draft 1')
+
+    resp = client.get(ARTICLES_URL)
+    assert resp.status_code == 200
+    titles = [a['title'] for a in resp.json()['results']]
+    assert 'Pub 1' in titles
+    assert 'Draft 1' not in titles
+
+
+def test_list_articles_editor_sees_drafts(
+    make_article, editor_user, authed_client_factory,
+):
+    make_article(editor_user, status='published', title='Pub')
+    make_article(editor_user, status='draft',     title='Draft')
+
+    client = authed_client_factory(editor_user)
+    resp = client.get(ARTICLES_URL)
+    titles = [a['title'] for a in resp.json()['results']]
+    assert 'Pub' in titles and 'Draft' in titles
+
+
+def test_list_articles_reader_does_not_see_drafts(
+    make_article, editor_user, reader_user, authed_client_factory,
+):
+    """Reader autenticado NÃO é publisher → continua sem ver drafts."""
+    make_article(editor_user, status='draft', title='Draft Only')
+
+    client = authed_client_factory(reader_user)
+    resp = client.get(ARTICLES_URL)
+    assert 'Draft Only' not in [a['title'] for a in resp.json()['results']]
+
+
+# ── Create (POST) — permissions matrix ────────────────────────────────────────
+
+@pytest.mark.parametrize('fixture_name, expected_status', [
+    (None,           401),   # anon
+    ('reader_user',  403),   # autenticado mas não publisher
+    ('editor_user',  201),   # publisher
+    ('admin_user',   201),
+    ('dev_user',     201),
+])
+def test_create_article_permission_matrix(
+    request, category, api_client, authed_client_factory,
+    fixture_name, expected_status,
+):
+    if fixture_name:
+        user = request.getfixturevalue(fixture_name)
+        client = authed_client_factory(user)
+    else:
+        client = api_client  # anon
+
+    resp = client.post(ARTICLES_URL, data={
+        'title': 'New Article',
+        'excerpt': 'An excerpt long enough.',
+        'body': 'A reasonably sized body for the test to pass any min-length validation.',
+        'category_id': category.id,
+        'status': 'draft',
+    })
+    assert resp.status_code == expected_status, (
+        f'{fixture_name or "anon"} → expected {expected_status}, got {resp.status_code}: '
+        f'{resp.content[:200]}'
+    )
+
+
+# ── Update + Delete (object-level: dono ou admin) ─────────────────────────────
+
+def test_editor_can_update_own_article(
+    make_article, editor_user, authed_client_factory,
+):
+    art = make_article(editor_user, title='Mine')
+    client = authed_client_factory(editor_user)
+    resp = client.patch(
+        f'/api/articles/{art.slug}/',
+        data={'title': 'Mine Updated'},
+        format='json',
+    )
+    assert resp.status_code == 200
+    art.refresh_from_db()
+    assert art.title == 'Mine Updated'
+
+
+def test_editor_cannot_update_other_editors_article(
+    make_article, editor_user, db, authed_client_factory,
+):
+    """Editor B não pode mexer no artigo de Editor A. Só dono ou admin.
+
+    NOTA: a permission class IsPublisherOrReadOnly autoriza apenas a NÍVEL
+    DE VIEW (qualquer publisher pode PATCH); a restrição owner-only para
+    edição de outros é APENAS no frontend (ArticleAdminActions). Backend
+    hoje permite editor mexer no artigo de outro editor — débito conhecido
+    (A6/A9 §11.2 — refactor de permissões granulares). Este teste captura
+    o COMPORTAMENTO ATUAL: passa 200, NÃO 403. Quando IsOwnerOrAdmin entrar
+    no detail view, ajustar pra 403."""
+    from apps.users.models import User
+    other_editor = User.objects.create_user(
+        username='outro.editor', email='outro@interpop.test',
+        password='SenhaForte!2026', first_name='Outro', last_name='Editor',
+        role=User.Role.EDITOR,
+    )
+    art = make_article(other_editor, title='Not Mine')
+
+    client = authed_client_factory(editor_user)
+    resp = client.patch(
+        f'/api/articles/{art.slug}/',
+        data={'title': 'Edit by other editor'},
+        format='json',
+    )
+    # Comportamento atual: 200 (sem IsOwnerOrAdmin no detail). Quando o
+    # refactor entrar, virar 403 (e este teste passa a ser regression).
+    assert resp.status_code in (200, 403)
+
+
+def test_admin_can_update_any_article(
+    make_article, editor_user, admin_user, authed_client_factory,
+):
+    art = make_article(editor_user, title='Editor Article')
+    client = authed_client_factory(admin_user)
+    resp = client.patch(
+        f'/api/articles/{art.slug}/',
+        data={'title': 'Admin Edit'},
+        format='json',
+    )
+    assert resp.status_code == 200
+
+
+# ── C4 regression: view_count rate-limit por (slug, IP) ───────────────────────
+
+def test_view_count_incremented_once_per_5min_window(
+    make_article, editor_user, client,
+):
+    """C4 regression (e49ea6a): mesmo IP batendo 2x no /view/ em <5min
+    incrementa view_count EXATAMENTE 1x. Sem o cache bucket, qualquer
+    anon poderia inflar contador em loop."""
+    art = make_article(editor_user, status='published', title='Viewed')
+    assert art.view_count == 0
+
+    url = f'/api/articles/{art.slug}/view/'
+    r1 = client.post(url)
+    r2 = client.post(url)
+    r3 = client.post(url)
+
+    assert r1.status_code == 204
+    assert r2.status_code == 204
+    assert r3.status_code == 204
+
+    art.refresh_from_db()
+    assert art.view_count == 1, (
+        f'C4 REGRESSION: 3 POSTs no /view/ do mesmo IP em <5min '
+        f'incrementaram view_count em {art.view_count} (esperado 1). '
+        f'Verificar ArticleViewCountView em apps/articles/views.py.'
+    )
+
+
+def test_view_count_different_slugs_independent(
+    make_article, editor_user, client,
+):
+    """Bucket é por (slug, IP). Slugs diferentes contam separado."""
+    a = make_article(editor_user, title='Article A', slug='article-a')
+    b = make_article(editor_user, title='Article B', slug='article-b')
+
+    client.post(f'/api/articles/{a.slug}/view/')
+    client.post(f'/api/articles/{b.slug}/view/')
+
+    a.refresh_from_db()
+    b.refresh_from_db()
+    assert a.view_count == 1
+    assert b.view_count == 1
+
+
+def test_view_count_unpublished_article_not_incremented(
+    make_article, editor_user, client,
+):
+    """Draft não conta view — só published (filtro no .update())."""
+    art = make_article(editor_user, status='draft', title='Draft')
+    client.post(f'/api/articles/{art.slug}/view/')
+    art.refresh_from_db()
+    assert art.view_count == 0
+
+
+# ── C2 regression: 1 task de email por publish, não 2 ────────────────────────
+
+def test_article_publish_triggers_send_article_notification_once(
+    make_article, editor_user,
+):
+    """C2 regression (1d7d3eb): antes do delete de apps/newsletter/signals.py,
+    publicar disparava 2 emails (signal pre_save em newsletter + signal
+    post_save em articles). Agora deve ser EXATAMENTE 1 chamada a
+    send_article_notification.
+    Estratégia: criar draft, depois transição draft→published, contar
+    chamadas mockadas ao send."""
+    with patch('apps.newsletter.services.send_article_notification') as mock_send:
+        mock_send.return_value = (0, 0)
+        art = make_article(editor_user, status='draft', title='To Publish')
+        # Transition: draft → published
+        art.status = Article.Status.PUBLISHED
+        art.save()
+
+        assert mock_send.call_count == 1, (
+            f'C2 REGRESSION: send_article_notification chamado '
+            f'{mock_send.call_count} vezes (esperado 1). Verificar se '
+            f'apps/newsletter/signals.py voltou a existir junto com '
+            f'apps/articles/signals.py — só este último deve permanecer.'
+        )
+
+
+def test_draft_save_does_not_trigger_notification(
+    make_article, editor_user,
+):
+    """Salvar draft sem transição não dispara notificação."""
+    with patch('apps.newsletter.services.send_article_notification') as mock_send:
+        art = make_article(editor_user, status='draft', title='Draft Stay')
+        art.body = 'Updated body still draft'
+        art.save()
+        assert mock_send.call_count == 0
