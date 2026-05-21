@@ -15,7 +15,7 @@ Any UI/UX task: design, redesign, audit, component selection, palette/typography
 
 ## Origin
 
-Derived from `docs/ecossistema_ui_ux_revisado.pdf` of the Interpop editorial project, which curates the same five-category map used by editorial newsrooms and design systems teams.
+Derived from `docs/references/ecossistema_ui_ux_revisado.pdf` of the Interpop editorial project, which curates the same five-category map used by editorial newsrooms and design systems teams.
 
 ## Installation
 

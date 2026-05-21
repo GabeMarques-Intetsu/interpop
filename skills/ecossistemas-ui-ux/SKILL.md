@@ -98,6 +98,6 @@ When invoked (by the orchestration protocol or explicitly):
 
 ## References
 
-- Full source: `docs/ecossistema_ui_ux_revisado.pdf` (Interpop repository).
+- Full source: `docs/references/ecossistema_ui_ux_revisado.pdf` (Interpop repository).
 - Project-specific application fluxo: `AGENTS.md` → section _Padrão `ecossistemas_ui_ux`_.
 - Companion skill (when dashboards are involved): `referencias_dashboards` standard in the same AGENTS.md.

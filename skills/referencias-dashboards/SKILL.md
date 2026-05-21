@@ -91,6 +91,6 @@ When invoked (by the orchestration protocol or explicitly):
 
 ## References
 
-- Full source: `docs/guia_referencias_dashboards.pdf` (Interpop repository).
+- Full source: `docs/references/guia_referencias_dashboards.pdf` (Interpop repository).
 - Project-specific application fluxo: `AGENTS.md` → section _Padrão `referencias_dashboards`_.
 - Sibling skill (broader UI/UX context): `ecossistemas-ui-ux`.

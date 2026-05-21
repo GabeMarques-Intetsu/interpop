@@ -6,7 +6,7 @@
 
 ## 0. Comportamento esperado (PDF Gabarito das IAs)
 
-> Fonte: [`docs/PDF Gabarito.pdf`](./docs/PDF%20Gabarito.pdf). Estas 5 diretrizes valem em **toda** interação, antes de qualquer skill ou comando.
+> Fonte: [`docs/references/PDF Gabarito.pdf`](./docs/references/PDF%20Gabarito.pdf). Estas 5 diretrizes valem em **toda** interação, antes de qualquer skill ou comando.
 
 Atue como **sócio estratégico sênior**, não como assistente passivo. Cinco regras inegociáveis:
 
@@ -156,7 +156,7 @@ Cada sumário abaixo está aqui propositalmente — ele é carregado no system p
 
 **Princípio**: dashboard ruim mostra tudo; dashboard bom mostra **o que importa na ordem que importa**.
 
-📖 **Detalhe**: [`skills/referencias-dashboards/SKILL.md`](./skills/referencias-dashboards/SKILL.md). Fonte: `docs/guia_referencias_dashboards.pdf`.
+📖 **Detalhe**: [`skills/referencias-dashboards/SKILL.md`](./skills/referencias-dashboards/SKILL.md). Fonte: `docs/references/guia_referencias_dashboards.pdf`.
 
 ### `ecossistemas_ui_ux` (sumário)
 
@@ -168,7 +168,7 @@ Cada sumário abaixo está aqui propositalmente — ele é carregado no system p
 
 **Princípio**: observar como líderes resolvem problemas, não copiar estética. Bom design é **funcional, acessível e rápido** — auditoria torna isso mensurável.
 
-📖 **Detalhe**: [`skills/ecossistemas-ui-ux/SKILL.md`](./skills/ecossistemas-ui-ux/SKILL.md). Fonte: `docs/ecossistema_ui_ux_revisado.pdf`.
+📖 **Detalhe**: [`skills/ecossistemas-ui-ux/SKILL.md`](./skills/ecossistemas-ui-ux/SKILL.md). Fonte: `docs/references/ecossistema_ui_ux_revisado.pdf`.
 
 ### `frontend-design` (sumário)
 
@@ -199,7 +199,7 @@ Cada sumário abaixo está aqui propositalmente — ele é carregado no system p
 
 ---
 
-_Atualizado em 2026-05-19 — adicionada §0 "Comportamento esperado" a partir de `docs/PDF Gabarito.pdf` (5 diretrizes inegociáveis + acknowledgment de sessão); skill `claude-cookbooks`, comandos `uv` no topo, sumários para todos os plugins/skills ativos (garante invocação mesmo se o protocolo falhar), reorganização para colocar comandos antes das listas longas._
+_Atualizado em 2026-05-19 — adicionada §0 "Comportamento esperado" a partir de `docs/references/PDF Gabarito.pdf` (5 diretrizes inegociáveis + acknowledgment de sessão); skill `claude-cookbooks`, comandos `uv` no topo, sumários para todos os plugins/skills ativos (garante invocação mesmo se o protocolo falhar), reorganização para colocar comandos antes das listas longas._
 
 ---
 

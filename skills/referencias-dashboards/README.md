@@ -16,7 +16,7 @@ Any task involving a dashboard, admin metrics screen, KPI panel, BI report, real
 
 ## Origin
 
-Derived from `docs/guia_referencias_dashboards.pdf` of the Interpop editorial project. The Klipfolio rule (aggregates on top, drill-down below) and Geckoboard rule (minimalism for real-time) are quoted directly from that guide and are project standards.
+Derived from `docs/references/guia_referencias_dashboards.pdf` of the Interpop editorial project. The Klipfolio rule (aggregates on top, drill-down below) and Geckoboard rule (minimalism for real-time) are quoted directly from that guide and are project standards.
 
 ## Installation
 
