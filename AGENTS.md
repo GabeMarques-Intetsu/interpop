@@ -195,6 +195,7 @@ Cada sumário abaixo está aqui propositalmente — ele é carregado no system p
 - **Antes de Claude API**: invocar `claude-cookbooks` (sumário §3).
 - **Antes de qualquer mudança**: aplicar o protocolo de skills do `~/.claude/CLAUDE.md` global (mapear domínio → listar skills → declarar → invocar → executar).
 - **Validação obrigatória de frontend**: WCAG 2.2 + Core Web Vitals em toda entrega.
+- **Política de testes**: ver §6 — INEGOCIÁVEL, leitura obrigatória antes de qualquer modificação de código.
 - **`backend/.env` e `backend/db.sqlite3`** estão no `.gitignore` — nunca commitar.
 
 ---
@@ -287,3 +288,47 @@ Skills continuam sendo o _como_; roadmaps ancoram o _território_.
 ---
 
 _Atualizado em 2026-05-20 — adicionada §5 com 19 roadmaps canônicos de roadmap.sh, mapeamento por relevância para o stack Interpop + skills correspondentes. Versão project-agnostic em `~/.claude/CLAUDE.md` (global)._
+
+---
+
+## 6. Política de testes (REGRA INEGOCIÁVEL)
+
+> **Antes de implementar, modificar ou refatorar qualquer código que possa ser testado, deve existir teste.** Sem exceção. Regra dura, igual ao §0 (Gabarito) e ao §2 (skills).
+>
+> O catálogo completo, rationale, stack, gates, templates de report e exemplos vivem em [`docs/tests/testing-standards.md`](./docs/tests/testing-standards.md) — leitura obrigatória antes de tocar em código testável.
+
+### 6.1 Os 6 tipos de teste praticados
+
+| #   | Tipo                              | Definição curta                                                     | Quando aplicar                                                                     | Estado                              |
+| --- | --------------------------------- | ------------------------------------------------------------------- | ---------------------------------------------------------------------------------- | ----------------------------------- |
+| 1   | **Unitário**                      | Testa 1 função/método isolado, sem DB nem HTTP. Mais rápido (~ms).  | Lógica pura, helpers, utils, validators, computed properties.                      | ✅ ativo                            |
+| 2   | **Retroativo (backfill)**         | Testa código pré-existente sem cobertura, escrito DEPOIS do código. | Refactor de área crítica; bug descoberto em código velho.                          | ✅ ativo                            |
+| 3   | **TDD (test-driven-development)** | Teste PRIMEIRO (vermelho → verde → refactor).                       | Lógica de segurança, cálculos de domínio, migrations one-shot, hotfix de produção. | ✅ ativo                            |
+| 4   | **Integração**                    | Múltiplos componentes juntos com DB real, testa fronteiras.         | API endpoints E2E backend, signals + service interagindo.                          | ✅ ativo (parcial)                  |
+| 5   | **E2E (end-to-end)**              | Fluxo completo browser → API → DB via Playwright.                   | Fluxos críticos: login, publicar artigo, comentar, banir.                          | ⏳ implementação futura (Sprint 3+) |
+| 6   | **Regressão**                     | Teste escrito APÓS um bug, reproduzindo o cenário exato que falhou. | Toda vez que um bug crítico é corrigido. Garante que NÃO volta.                    | ✅ ativo                            |
+
+### 6.2 Convenções operacionais
+
+- **Cada execução de teste gera report** em `docs/tests/reports/AAAA-MM-DD_HH-MM-SS.md` (timestamp ISO 8601 com underscore, hora em formato 24h, fuso UTC-3 Brasília).
+- **Cópia em PDF** (gerada via `scripts/md-to-pdf.sh`) vai em `docs/tests/reports-pdf/` — formato com 2 seções obrigatórias: **(a) Resumo simples + direto** (1 parágrafo para qualquer leitor) e **(b) Análise técnica + detalhada** (stack traces, file:line, métricas).
+- **Documento mestre** `docs/tests/testing-standards.md` define regras, stack, gates de cobertura, naming, templates. Atualiza junto com decisões arquiteturais de teste (cada mudança vira ADR no `Improvement-system.md`).
+- **Política dura de merge**: PR não merge se cobertura **DESCE**. Aceitável: cobertura sobe ou estável.
+- **Gate atual de cobertura**: 40% (Sprint 1 — atingido com 82% efetivo, 88 testes). Sobe 10pp/sprint até 80%.
+
+### 6.3 Quando consultar testing-standards.md
+
+- Antes de escrever **qualquer** novo teste — consultar template, naming, locality.
+- Antes de criar **report** de teste — consultar template de PDF (simples + técnico).
+- Antes de propor **mudança em gate** de cobertura ou stack — virar ADR antes de aplicar.
+- Antes de aceitar PR de outro contribuidor — confirmar conformidade com §6.
+
+### 6.4 Stack ativa
+
+- **Backend**: pytest 9 + pytest-django 4.12 + pytest-cov 7 + factory-boy + freezegun + pytest-mock. Configurado em `backend/pytest.ini` + `backend/conftest.py`.
+- **Frontend**: vitest + Testing Library + Playwright (E2E futuro). Configurado em `package.json` (a entrar — F4/F11).
+- **CI gate**: `.github/workflows/ci.yml` roda `uv run pytest --cov-fail-under=40` em todo PR; falha bloqueia merge.
+
+---
+
+_Atualizado em 2026-05-21 — adicionada §6 Política de testes (INEGOCIÁVEL): 6 tipos de teste praticados, convenções operacionais (reports `docs/tests/` com timestamp ISO 8601), cross-ref para `testing-standards.md` como documento-mestre. Item-pointer adicionado em §4 Convenções._
