@@ -15,7 +15,6 @@
     "lint:check": "eslint .",
     "format": "prettier --write .",
     "check-format": "prettier --check .",
-    "pre-commit": "npm run lint && npm run format",
     "prepare": "husky",
     "preview": "vite preview"
   },
