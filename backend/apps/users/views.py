@@ -17,7 +17,12 @@ from .serializers import (
     UserAdminSerializer,
     UserPublicSerializer,
 )
-from .services import issue_tokens_for_user, logout_user, rotate_refresh_token
+from .services import (
+    blacklist_all_user_tokens,
+    issue_tokens_for_user,
+    logout_user,
+    rotate_refresh_token,
+)
 
 
 # ── Auth endpoints ────────────────────────────────────────────────────────────
@@ -104,6 +109,9 @@ class ChangePasswordView(APIView):
         serializer = ChangePasswordSerializer(data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True)
         serializer.save()
+        # S7 — invalida TODAS as sessões (não só a atual). Cobre dispositivo
+        # esquecido / atacante com senha antiga. Padrão NYT/GitHub/Substack.
+        blacklist_all_user_tokens(request.user)
         response = Response({'detail': 'Senha alterada com sucesso.'})
         logout_user(request, response)
         return response

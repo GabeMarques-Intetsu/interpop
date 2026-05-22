@@ -21,6 +21,7 @@ from rest_framework_simplejwt.token_blacklist.models import BlacklistedToken
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from apps.users.services import (
+    blacklist_all_user_tokens,
     issue_tokens_for_user,
     logout_user,
     rotate_refresh_token,
@@ -155,3 +156,54 @@ def test_logout_user_silent_on_invalid_token():
 
     # Cookies foram limpos mesmo assim
     assert response.cookies[ACCESS_COOKIE_NAME]['max-age'] == 0
+
+
+# ── S7: blacklist_all_user_tokens ──────────────────────────────────────────
+
+
+def test_blacklist_all_user_tokens_blacklists_active_tokens(reader_user):
+    """Emite 3 refresh tokens (simulando 3 dispositivos), chama helper,
+    confirma que TODOS viram blacklisted. Cenário S7: usuário troca senha
+    → todas as sessões invalidadas."""
+    # Emite 3 sessões distintas
+    t1 = RefreshToken.for_user(reader_user)
+    t2 = RefreshToken.for_user(reader_user)
+    t3 = RefreshToken.for_user(reader_user)
+
+    count = blacklist_all_user_tokens(reader_user)
+
+    assert count == 3, f'Esperado 3 tokens blacklistados, foram {count}'
+    # Confirma que cada token (jti) está na blacklist
+    for token in (t1, t2, t3):
+        assert BlacklistedToken.objects.filter(token__jti=token['jti']).exists(), (
+            f'Token jti={token["jti"]} não foi blacklistado'
+        )
+
+
+def test_blacklist_all_user_tokens_idempotent(reader_user):
+    """Chamar 2x não pode estourar (já-blacklistados devem ser ignorados)."""
+    RefreshToken.for_user(reader_user)
+    RefreshToken.for_user(reader_user)
+
+    count1 = blacklist_all_user_tokens(reader_user)
+    count2 = blacklist_all_user_tokens(reader_user)
+
+    assert count1 == 2
+    # 2ª chamada não cria novas blacklists (bulk_create ignore_conflicts)
+    assert count2 == 0
+
+
+def test_blacklist_all_user_tokens_does_not_affect_other_users(
+    reader_user, editor_user,
+):
+    """Confirma escopo: helper só pega tokens do user passado, não vaza
+    pra outros usuários (defesa em profundidade)."""
+    reader_token = RefreshToken.for_user(reader_user)
+    editor_token = RefreshToken.for_user(editor_user)
+
+    blacklist_all_user_tokens(reader_user)
+
+    # Reader blacklistado
+    assert BlacklistedToken.objects.filter(token__jti=reader_token['jti']).exists()
+    # Editor INTACTO
+    assert not BlacklistedToken.objects.filter(token__jti=editor_token['jti']).exists()

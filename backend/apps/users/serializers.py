@@ -167,10 +167,17 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
         # token consumido mas senha não trocada — usuário ficava sem acesso.
         # ADR-012 / item C3 do Improvement-system.md §11.1.
         from django.db import transaction
+
+        from .services import blacklist_all_user_tokens
+
         with transaction.atomic():
             user = self._token_obj.user
             user.set_password(self.validated_data['new_password'])
             user.save(update_fields=['password', 'updated_at'])
             self._token_obj.is_used = True
             self._token_obj.save(update_fields=['is_used'])
+            # S7 — reset por email invalida TODAS as sessões. Cenário típico:
+            # usuário reseta porque suspeita de invasão — atacante autenticado
+            # em outro device é cortado imediatamente.
+            blacklist_all_user_tokens(user)
             return user

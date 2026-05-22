@@ -114,3 +114,56 @@ def logout_user(request, response: Response) -> None:
             # info (não warning) porque é caminho normal de duplo-logout.
             logger.info('logout_user: token already invalid', exc_info=True)
     _clear_auth_cookies(response)
+
+
+def blacklist_all_user_tokens(user) -> int:
+    """Blacklist TODOS os refresh tokens outstanding do usuário.
+
+    Usado quando trocar senha (ChangePasswordView) ou redefinir senha via
+    email (PasswordResetConfirmSerializer). Garante que sessões abertas em
+    outros dispositivos (notebook esquecido, celular vendido, navegador
+    público) sejam invalidadas — não apenas a sessão atual.
+
+    Retorna o número de tokens blacklistados (informação útil para audit).
+
+    S7 do Improvement-system §11.6 — comportamento padrão de NYT, GitHub,
+    Substack: trocar senha derruba TODAS as sessões. Sem isso, atacante que
+    obteve senha continua logado mesmo depois do usuário "trocar".
+
+    Implementação: SimpleJWT cria 1 OutstandingToken por chamada de
+    `RefreshToken.for_user()` (caminho usado em `issue_tokens_for_user`).
+    `BlacklistedToken.objects.bulk_create(ignore_conflicts=True)` é
+    idempotente — re-blacklistar uma já blacklistada não estoura.
+    """
+    # Import local: evita carregar app token_blacklist no startup de
+    # módulos que só precisam do helper de cookies.
+    from django.utils import timezone
+    from rest_framework_simplejwt.token_blacklist.models import (
+        BlacklistedToken,
+        OutstandingToken,
+    )
+
+    active_tokens = list(OutstandingToken.objects.filter(
+        user=user,
+        expires_at__gt=timezone.now(),
+    ))
+    # Count APENAS tokens ainda não blacklistados (bulk_create com
+    # ignore_conflicts=True não distingue inserts reais de skipped;
+    # contar antes/depois é a forma confiável).
+    already_blacklisted_ids = set(
+        BlacklistedToken.objects
+        .filter(token__in=active_tokens)
+        .values_list('token_id', flat=True)
+    )
+    new_count = sum(1 for t in active_tokens if t.pk not in already_blacklisted_ids)
+
+    BlacklistedToken.objects.bulk_create(
+        [BlacklistedToken(token=t) for t in active_tokens],
+        ignore_conflicts=True,
+    )
+    logger.info(
+        'blacklist_all_user_tokens: %d new tokens invalidated for user_id=%s '
+        '(%d already blacklisted)',
+        new_count, user.pk, len(active_tokens) - new_count,
+    )
+    return new_count
