@@ -23,6 +23,7 @@ import articleService, {
   type ApiCategory,
 } from '../../services/articleService';
 import type { ApiUser } from '../../services/authService';
+import { extractApiError } from '../../utils/extractApiError';
 
 type StatusFilter = 'all' | 'published' | 'draft';
 
@@ -131,9 +132,8 @@ export function AdminPosts({ currentUser, isAdmin }: AdminPostsProps) {
         // Re-fetch usando filtros atuais — mantém a página consistente.
         await fetchArticles(search, categorySlug, statusFilter);
       } catch (err: unknown) {
-        const e = err as { response?: { data?: { detail?: string } } };
         setError(
-          e?.response?.data?.detail ?? 'Não foi possível excluir a publicação.',
+          extractApiError(err, 'Não foi possível excluir a publicação.'),
         );
       } finally {
         setDeletingSlug('');
