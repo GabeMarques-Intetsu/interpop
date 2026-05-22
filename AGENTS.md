@@ -76,7 +76,7 @@ Sempre que houver sobreposição de orientações, aplicar pela ordem abaixo —
 1. **`andrej-karpathy-skills@karpathy-skills`** — diretriz mestre. Clareza intuitiva, explicação progressiva, raciocínio do primeiro princípio, prosa enxuta. Define **tom e forma** de qualquer resposta técnica.
 2. **`superpowers@claude-plugins-official`** — base oficial do método: TDD, brainstorming, debugging sistemático, escrita de planos, execução de planos, revisão de código, finalização de branches. Define **processo**.
 3. **`superpowers@superpowers-dev`** — variante de desenvolvimento (skills experimentais). Complemento ao oficial.
-4. **`claude-cookbooks`** (skill local, `skills/claude-cookbooks/`) — catálogo dos notebooks oficiais Anthropic em `/home/gabriel/Documentos/Projetos/config/claude-cookbooks-main/`. **Antes de implementar qualquer feature Claude API** (caching, tool use, RAG, multimodal, agent SDK, evals), consultar o notebook correspondente. Define **referência de implementação**.
+4. **`claude-cookbooks`** (skill local, `skills/claude-cookbooks/`) — catálogo dos notebooks oficiais Anthropic em `/home/gabriel/Documentos/Projetos/claude-cookbooks-main/`. **Antes de implementar qualquer feature Claude API** (caching, tool use, RAG, multimodal, agent SDK, evals), consultar o notebook correspondente. Define **referência de implementação**.
 5. **`referencias-dashboards`** (skill local, `skills/referencias-dashboards/`) — regras duras para dashboards/KPIs/painéis admin. **Em decisões de dashboard, vence `ecossistemas-ui-ux`** (especialização > geral).
 6. **`ecossistemas-ui-ux`** (skill local, `skills/ecossistemas-ui-ux/`) — combina 5 categorias de fontes antes de qualquer decisão de UI/UX que **não seja dashboard**. Calibrada para o projeto; vence `frontend-design` em conflito visual.
 7. **`frontend-design@claude-plugins-official`** — base genérica React/Tailwind. Usar quando nem `referencias-dashboards` nem `ecossistemas-ui-ux` cobrem o caso.
@@ -121,7 +121,7 @@ Cada sumário abaixo está aqui propositalmente — ele é carregado no system p
 
 **Quando aplicar**: **antes de escrever qualquer código** que use Claude API / Anthropic SDK.
 
-**Caminho local**: `/home/gabriel/Documentos/Projetos/config/claude-cookbooks-main/`
+**Caminho local**: `/home/gabriel/Documentos/Projetos/claude-cookbooks-main/`
 
 **Categorias e quando abrir**:
 
@@ -337,4 +337,4 @@ _Atualizado em 2026-05-20 — adicionada §5 com 19 roadmaps canônicos de roadm
 
 ---
 
-_Atualizado em 2026-05-21 — adicionada §6 Política de testes (INEGOCIÁVEL): 6 tipos de teste praticados, convenções operacionais (reports `docs/tests/` com timestamp ISO 8601), cross-ref para `testing-standards.md` como documento-mestre. Item-pointer adicionado em §4 Convenções._
+_Atualizado em 2026-05-21 — adicionada §6 Política de testes (INEGOCIÁVEL): 10 tipos de teste core praticados + 13 tipos de extensão + protocolo formal para criar tipo novo, convenções operacionais (reports `docs/tests/` com timestamp ISO 8601), cross-ref para `testing-standards.md` como documento-mestre. Item-pointer adicionado em §4 Convenções._

@@ -19,7 +19,7 @@ Derived from `docs/references/ecossistema_ui_ux_revisado.pdf` of the Interpop ed
 
 ## Installation
 
-Source lives at `~/.claude/skills/ecossistemas-ui-ux/`. No symlink needed — the directory is already inside the global skills root that Claude Code scans on startup.
+Source lives in this project at `skills/ecossistemas-ui-ux/`. The path `~/.claude/skills/ecossistemas-ui-ux/` is a **symlink** to here — single source of truth as documented in [`skills/README.md`](../README.md). Edit only the in-project version.
 
 ## Usage
 

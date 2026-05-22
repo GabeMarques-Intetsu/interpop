@@ -86,10 +86,25 @@ interpop/
 │   ├── ecossistemas-ui-ux/     # Padrão UI/UX do projeto (5 categorias de fontes)
 │   ├── referencias-dashboards/ # Padrão para dashboards/KPIs/admin
 │   └── README.md               # Catálogo + instruções de instalação
-├── docs/                       # PDFs editoriais + assets
-│   ├── ecossistema_ui_ux_revisado.pdf
-│   ├── guia_referencias_dashboards.pdf
-│   └── Logos/                  # Variantes do logo (SVG + assinatura)
+├── docs/
+│   ├── Logos/                  # Variantes do logo (SVG + assinatura)
+│   ├── planning/               # Planejamento interno (gitignored — local-only)
+│   │   ├── Improvement-system.md
+│   │   ├── HOSTING-DEPLOY-PLAN.md
+│   │   ├── session-auth-strategy.md
+│   │   ├── reorganization-proposal-2026-05-21.md
+│   │   └── audits-2026-05-21/
+│   ├── references/             # PDFs canônicos (fontes primárias)
+│   │   ├── PDF Gabarito.pdf
+│   │   ├── ecossistema_ui_ux_revisado.pdf
+│   │   └── guia_referencias_dashboards.pdf
+│   ├── tests/                  # Padrões + reports de teste
+│   │   ├── testing-standards.md (+ .pdf)
+│   │   ├── reports/            # .md por execução (gitignored — local)
+│   │   └── reports-pdf/        # PDF espelho (gitignored — local)
+│   └── architecture/           # (a criar) overview + diagramas C4
+├── scripts/                    # md-to-pdf.sh + futuros stubs operacionais
+├── .github/workflows/          # ci.yml (pytest cov 40% + tsc/lint/build)
 ├── AGENTS.md                   # Instruções para agentes AI (espelhado em CLAUDE.md)
 └── CLAUDE.md                   # → AGENTS.md (symlink — mesmo conteúdo)
 ```

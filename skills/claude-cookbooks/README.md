@@ -1,6 +1,6 @@
 # claude-cookbooks
 
-A Claude Code skill that points to the official Anthropic Cookbook notebooks living locally at `/home/gabriel/Documentos/Projetos/config/claude-cookbooks-main/`, so any Claude API / Anthropic SDK feature in the Interpop project starts from a proven reference pattern instead of being implemented from scratch.
+A Claude Code skill that points to the official Anthropic Cookbook notebooks living locally at `/home/gabriel/Documentos/Projetos/claude-cookbooks-main/`, so any Claude API / Anthropic SDK feature in the Interpop project starts from a proven reference pattern instead of being implemented from scratch.
 
 ## When it triggers
 
@@ -15,7 +15,7 @@ Any task involving Claude API or Anthropic SDK: prompt caching, tool use, extend
 
 ## Origin
 
-Derived from the official Anthropic Cookbook repository, cloned locally at `/home/gabriel/Documentos/Projetos/config/claude-cookbooks-main/`.
+Derived from the official Anthropic Cookbook repository, cloned locally at `/home/gabriel/Documentos/Projetos/claude-cookbooks-main/`.
 
 ## Installation
 

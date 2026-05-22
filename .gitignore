@@ -42,3 +42,14 @@ coverage.xml
 
 # Documentos internos de planejamento (não versionados)
 docs/planning/
+
+# Reports de teste (histórico só local — evita inflate do repo).
+# Mantém .gitkeep pra preservar diretórios vazios. Decisão registrada em
+# docs/planning/reorganization-proposal-2026-05-21.md §9 item 2.
+docs/tests/reports/*
+!docs/tests/reports/.gitkeep
+docs/tests/reports-pdf/*
+!docs/tests/reports-pdf/.gitkeep
+
+# Settings locais do Claude harness (pode conter tokens/permissões)
+.claude/

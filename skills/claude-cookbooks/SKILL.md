@@ -1,6 +1,6 @@
 ---
 name: claude-cookbooks
-description: Use before implementing any Claude API / Anthropic SDK feature (prompt caching, tool use, extended thinking, RAG, vision, agent SDK, evals, sub-agents, JSON mode, moderation) — points to the official Anthropic cookbook notebooks at `/home/gabriel/Documentos/Projetos/config/claude-cookbooks-main` so the implementation follows Anthropic's reference patterns instead of reinventing them.
+description: Use before implementing any Claude API / Anthropic SDK feature (prompt caching, tool use, extended thinking, RAG, vision, agent SDK, evals, sub-agents, JSON mode, moderation) — points to the official Anthropic cookbook notebooks at `/home/gabriel/Documentos/Projetos/claude-cookbooks-main` so the implementation follows Anthropic's reference patterns instead of reinventing them.
 ---
 
 # Claude Cookbooks — Reference Notebooks
@@ -27,7 +27,7 @@ The principle: **never implement from scratch what Anthropic has already documen
 All notebooks live locally at:
 
 ```
-/home/gabriel/Documentos/Projetos/config/claude-cookbooks-main/
+/home/gabriel/Documentos/Projetos/claude-cookbooks-main/
 ```
 
 Use `Read` to open `.ipynb` files directly. Notebooks render with code cells + outputs visible.
@@ -145,6 +145,6 @@ Any Claude API integration in this project (article moderation, summarization, c
 
 ## References
 
-- Cookbook root: `/home/gabriel/Documentos/Projetos/config/claude-cookbooks-main/`
-- Cookbook README: `/home/gabriel/Documentos/Projetos/config/claude-cookbooks-main/README.md`
+- Cookbook root: `/home/gabriel/Documentos/Projetos/claude-cookbooks-main/`
+- Cookbook README: `/home/gabriel/Documentos/Projetos/claude-cookbooks-main/README.md`
 - Companion plugin: `claude-api` (Skill tool — for live SDK guidance + caching defaults).

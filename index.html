@@ -31,10 +31,16 @@
       </div>
     </div>
     <div id="root"></div>
-    <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
-    <script>
-      new window.VLibras.Widget('https://vlibras.gov.br/app');
-    </script>
+    <!-- App (módulo — não bloqueia parse). -->
     <script type="module" src="/src/main.tsx"></script>
+    <!-- VLibras (acessibilidade Libras, Lei 10.436/2002). `defer` evita
+         bloquear o parse do HTML; o widget só inicializa após o DOM
+         pronto (DOMContentLoaded). Item A6 da reorganization-proposal. -->
+    <script defer src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+    <script defer>
+      window.addEventListener('DOMContentLoaded', () => {
+        if (window.VLibras) new window.VLibras.Widget('https://vlibras.gov.br/app');
+      });
+    </script>
   </body>
 </html>

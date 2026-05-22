@@ -20,7 +20,7 @@ Derived from `docs/references/guia_referencias_dashboards.pdf` of the Interpop e
 
 ## Installation
 
-Source lives at `~/.claude/skills/referencias-dashboards/`. No symlink needed — already inside the global skills root that Claude Code scans on startup.
+Source lives in this project at `skills/referencias-dashboards/`. The path `~/.claude/skills/referencias-dashboards/` is a **symlink** to here — single source of truth as documented in [`skills/README.md`](../README.md). Edit only the in-project version.
 
 ## Usage
 
