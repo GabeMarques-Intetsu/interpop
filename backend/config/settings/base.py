@@ -271,6 +271,22 @@ SECURE_REFERRER_POLICY = 'strict-origin-when-cross-origin'
 # via SecurityMiddleware. S9 do Improvement-system §11.6.
 SECURE_CROSS_ORIGIN_OPENER_POLICY = 'same-origin'
 
+# ── Content-Security-Policy (S3 do Improvement-system §11.6) ─────────────────
+# CSP entra em modo Report-Only por default — coleta violations no console
+# do browser (e POST em CSP_REPORT_URI se setado) sem bloquear nada por
+# 1 semana. Depois do baseline limpo, virar CSP_ENFORCE=True no .env de prod
+# pra browsers bloquearem violations de fato.
+#
+# Endpoint de report: pode ser criado interno em /api/v1/security/csp-report/
+# (handler simples logando + Sentry) OU usar Sentry CSP endpoint
+# (https://docs.sentry.io/product/security-policy-reporting/).
+#
+# Cobertura: aplicado a TODA resposta do Django via SecurityHeadersMiddleware.
+# SPA frontend é servido pelo nginx — CSP do nginx é configurada separado
+# (HOSTING-DEPLOY-PLAN.md — item a entrar pós-baseline).
+CSP_ENFORCE = config('CSP_ENFORCE', default=False, cast=bool)
+CSP_REPORT_URI = config('CSP_REPORT_URI', default='')
+
 # ── Logging (A27 do Improvement-system §11.2) ────────────────────────────────────
 # Em dev: formato legível tipo `[2026-05-21 00:35] INFO interpop.foo [req=abc123
 # user=42]: mensagem`. Em prod: JSON único por linha pra Loki/journald/Sentry
