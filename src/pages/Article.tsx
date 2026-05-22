@@ -199,12 +199,18 @@ export function Article() {
 
         {article.cover_image && (
           <figure className="article-cover">
+            {/* P2: width/height hint para o browser reservar área antes do
+                load (anti-CLS). Aspect-ratio do container (16:9) e o CSS
+                aplicam object-fit: cover — atributos NÃO travam o tamanho
+                renderizado, só dão a proporção. */}
             <img
               src={article.cover_image}
               alt={article.title}
               loading="eager"
               decoding="async"
               fetchPriority="high"
+              width={1600}
+              height={900}
             />
             {article.cover_caption && (
               <figcaption className="article-cover__caption">
