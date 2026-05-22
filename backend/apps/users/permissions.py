@@ -44,12 +44,19 @@ class IsOwnerOrAdmin(BasePermission):
 
 
 class IsNotBanned(BasePermission):
-    """Reject requests from banned users."""
+    """Bloqueia requests de usuários autenticados banidos. Permite anônimos
+    (que devem ser tratados por IsAuthenticated quando login for exigido).
+
+    Adequada para `DEFAULT_PERMISSION_CLASSES` — endpoints públicos (AllowAny)
+    continuam permitindo anon mesmo com IsNotBanned no default, pois o
+    `permission_classes = [AllowAny]` no view sobrescreve o default inteiro.
+
+    S8 do Improvement-system §11.6 — defense in depth: além do bloqueio em
+    LoginSerializer e da imunidade de dev/admin, qualquer banned authenticated
+    é cortado no nível da request.
+    """
     message = 'Sua conta foi suspensa.'
 
     def has_permission(self, request, view):
-        return bool(
-            request.user
-            and request.user.is_authenticated
-            and not request.user.is_banned
-        )
+        user = request.user
+        return not (user.is_authenticated and user.is_banned)

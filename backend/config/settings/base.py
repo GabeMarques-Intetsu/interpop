@@ -68,6 +68,10 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'apps.audit.middleware.AuditLogMiddleware',
+    # Headers de segurança adicionais (Permissions-Policy). Django
+    # SecurityMiddleware cobre HSTS/COOP/Referrer/X-Frame nativamente.
+    # S9 do Improvement-system §11.6.
+    'apps.audit.security_headers_middleware.SecurityHeadersMiddleware',
     # Intercepta crawlers sociais (WhatsApp/Twitter/Facebook) em /noticia/<slug>
     # e devolve HTML com meta tags OG ricas. Outras requests passam intactas.
     'apps.articles.og_middleware.SocialOGMiddleware',
@@ -134,7 +138,11 @@ SIMPLE_JWT = {
     'BLACKLIST_AFTER_ROTATION': True,
     'UPDATE_LAST_LOGIN': True,
     'ALGORITHM': 'HS256',
-    'SIGNING_KEY': config('SECRET_KEY'),
+    # JWT_SIGNING_KEY env distinta de SECRET_KEY (defesa em profundidade).
+    # Vazamento de uma não compromete a outra. Em produção: SETAR JWT_SIGNING_KEY
+    # explicitamente no .env (chave aleatória ≥50 chars). Fallback p/ SECRET_KEY
+    # mantém retrocompat em dev sem .env modificado. S4 do Improvement-system §11.6.
+    'SIGNING_KEY': config('JWT_SIGNING_KEY', default=config('SECRET_KEY')),
     'AUTH_HEADER_TYPES': ('Bearer',),
     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
     'AUTH_COOKIE': 'access_token',
@@ -153,6 +161,10 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
+        # Defense in depth: bloqueia banned authenticated em TODA request
+        # (além do bloqueio no LoginSerializer). Endpoints públicos com
+        # AllowAny no view sobrescrevem o default inteiro. S8 §11.6.
+        'apps.users.permissions.IsNotBanned',
     ],
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
@@ -254,6 +266,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = 'DENY'
 SECURE_REFERRER_POLICY = 'strict-origin-when-cross-origin'
+# Cross-Origin-Opener-Policy: isola a janela do site de janelas abertas
+# por outras origens (mitiga XS-Leaks). Django 4.2+ injeta automaticamente
+# via SecurityMiddleware. S9 do Improvement-system §11.6.
+SECURE_CROSS_ORIGIN_OPENER_POLICY = 'same-origin'
 
 # ── Logging (A27 do Improvement-system §11.2) ────────────────────────────────────
 # Em dev: formato legível tipo `[2026-05-21 00:35] INFO interpop.foo [req=abc123
