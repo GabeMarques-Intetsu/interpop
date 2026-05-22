@@ -1,8 +1,8 @@
 # Testing Standards — Interpop
 
-> **Documento mestre de testes.** Define os 6 tipos praticados, stack, gates de cobertura, naming, templates de report e workflow. Referenciado pelo `AGENTS.md §6` como regra inegociável.
+> **Documento mestre de testes.** Define os 10 tipos core praticados (§2.1-§2.10) + 13 tipos de extensão reconhecidos (§2.11) + protocolo formal para criar tipo novo (§2.12), stack, gates de cobertura, naming, templates de report e workflow. Referenciado pelo `AGENTS.md §6` como regra inegociável.
 >
-> Versão 1.0 — 2026-05-21. Próxima revisão obrigatória: a cada novo ADR de teste em `Improvement-system.md §11.2` ou §12.1.
+> Versão 1.1 — 2026-05-21. Próxima revisão obrigatória: a cada novo ADR de teste em `Improvement-system.md §11.2` ou §12.1.
 
 ---
 
@@ -19,7 +19,7 @@ Justificativa de primeiro princípio:
 
 ---
 
-## 2. Os 6 tipos de teste praticados
+## 2. Os 10 tipos de teste core praticados
 
 ### 2.1 Teste unitário
 
