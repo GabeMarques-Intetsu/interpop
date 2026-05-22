@@ -1,22 +1,22 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
-import { Avatar } from '../../components/ui/Avatar';
-import { Button } from '../../components/ui/Button';
-import { Modal } from '../../components/ui/Modal';
+import { useAuth } from '@/contexts/AuthContext';
+import { Avatar } from '@/components/ui/Avatar';
+import { Button } from '@/components/ui/Button';
+import { Modal } from '@/components/ui/Modal';
 import moderationService, {
   type ApiBan,
   type ApiBanRequest,
-} from '../../services/moderationService';
+} from '@/services/moderationService';
 import metricsService, {
   type AdminMetricsResponse,
   type MetricsPeriod,
-} from '../../services/metricsService';
+} from '@/services/metricsService';
 import { MetricsDashboard } from './MetricsDashboard';
 import { AdminPosts } from './AdminPosts';
-import type { ApiUser as ModerationUser } from '../../services/authService';
-import { extractApiError } from '../../utils/extractApiError';
-import interpopLogo from '../../assets/interpop-logo.svg';
+import type { ApiUser as ModerationUser } from '@/services/authService';
+import { extractApiError } from '@/utils/extractApiError';
+import interpopLogo from '@/assets/interpop-logo.svg';
 import './Admin.css';
 
 type Tab = 'usuarios' | 'publicacoes' | 'banimentos' | 'metricas';
