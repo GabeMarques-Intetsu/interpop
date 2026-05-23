@@ -91,7 +91,7 @@ python-json-logger==4.1.0
     # via interpop-backend
 python-slugify==8.0.4
     # via interpop-backend
-redis==6.4.0
+redis==7.4.0
     # via kombu
 sentry-sdk==2.60.0
     # via interpop-backend
