@@ -71,7 +71,7 @@ packaging==26.2
     # via
     #   gunicorn
     #   kombu
-pillow==11.1.0
+pillow==12.2.0
     # via interpop-backend
 prompt-toolkit==3.0.52
     # via click-repl
