@@ -44,9 +44,38 @@ gh pr create --base develop --fill
 git checkout develop
 git pull
 gh pr create --base main --head develop --title "release: <resumo>"
+# após CI verde:
+gh pr merge <NUM> --squash
 ```
 
 > Só `develop` pode ser source de PR para `main`. Tentar de outra branch falha no `branch-gate.yml`.
+
+> **Método de merge para `main`: SEMPRE `--squash`.** Não usar `--rebase`. O ruleset exige `signed commits` (Require signed commits) e o GitHub **não auto-assina rebase merges** — as assinaturas dos commits originais quebram quando os parents mudam no rebase. Squash gera 1 commit em main que o GitHub assina automaticamente com sua chave (`web-flow`, `verified=true`). Para `develop` e branches de feature/bugfix, `--rebase` continua OK.
+
+### Tipos de commit (`.commitlintrc.json`)
+
+Aceitos: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, `revert`, `sec`, **`deps`**. O `deps` é usado pelo Dependabot (`deps(npm)`, `deps(py)`, `deps(actions)`) — não trocar para `chore` em reescritas offline, perderia o link com o PR original.
+
+### Signed commits (obrigatório para PRs para `main`)
+
+Ruleset `protect-main` exige assinatura criptográfica. Setup SSH signing (uma vez por máquina):
+
+```bash
+# 1. Cadastrar chave SSH como SIGNING KEY no GitHub:
+gh auth refresh -h github.com -s admin:ssh_signing_key
+gh ssh-key add ~/.ssh/id_rsa.pub --type signing --title "interpop-signing-$(hostname)"
+
+# 2. Configurar git para assinar todo commit:
+git config --global gpg.format ssh
+git config --global user.signingkey ~/.ssh/id_rsa.pub
+git config --global commit.gpgsign true
+
+# 3. (opcional, p/ verificação local de assinaturas)
+echo "$(git config user.email) $(awk '{print $1, $2}' ~/.ssh/id_rsa.pub)" > ~/.ssh/allowed_signers
+git config --global gpg.ssh.allowedSignersFile ~/.ssh/allowed_signers
+```
+
+Verificar: `git log --pretty=format:"%h %G? %s"` — `G` (good) é signed, `N` é unsigned. Server-side: `gh api /repos/.../commits/<sha> --jq '.commit.verification'`.
 
 ---
 
