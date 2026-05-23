@@ -53,7 +53,7 @@ django-celery-beat==2.9.0
     # via interpop-backend
 django-cors-headers==4.6.0
     # via interpop-backend
-django-filter==24.3
+django-filter==25.2
     # via interpop-backend
 django-timezone-field==7.2.1
     # via django-celery-beat
