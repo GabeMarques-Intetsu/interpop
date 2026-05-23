@@ -63,7 +63,7 @@ djangorestframework==3.17.1
     #   interpop-backend
 djangorestframework-simplejwt==5.5.1
     # via interpop-backend
-gunicorn==23.0.0
+gunicorn==26.0.0
     # via interpop-backend
 kombu==5.6.2
     # via celery
