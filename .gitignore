@@ -33,12 +33,15 @@ backend/.env
 backend/db.sqlite3
 backend/media/
 
-# Pytest + coverage
+# Pytest + coverage (backend)
 .pytest_cache/
 .coverage
 htmlcov/
 coverage.xml
 **/test-results/
+
+# Vitest coverage report (frontend, gerado por npm run test:cov)
+coverage/
 
 # Documentos internos de planejamento (não versionados)
 docs/planning/
