@@ -16,7 +16,8 @@
         "ci",
         "chore",
         "revert",
-        "sec"
+        "sec",
+        "deps"
       ]
     ],
     "subject-case": [0],
