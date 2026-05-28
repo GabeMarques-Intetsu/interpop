@@ -1072,6 +1072,11 @@
   transform: translate(-50%, -50%);
   text-align: center;
   pointer-events: none;
+  /* dl: column-reverse mantém o valor acima do rótulo (dt→dd no DOM). */
+  margin: 0;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
 }
 
 .dash__donut-value {
@@ -1082,6 +1087,7 @@
   line-height: 1;
   color: var(--clr-text);
   font-variant-numeric: tabular-nums;
+  margin: 0;
 }
 
 .dash__donut-label {

@@ -115,7 +115,8 @@
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--clr-primary);
-  margin-bottom: var(--sp-5);
+  /* margin explícito: zera o default do <h2> (mantém só o espaço inferior). */
+  margin: 0 0 var(--sp-5);
 }
 
 .home-featured__dot {

@@ -85,12 +85,14 @@ export function Home() {
 
       {/* Featured */}
       {featured && (
-        <section className="home-featured" aria-label="Destaque">
+        <section className="home-featured" aria-labelledby="featured-heading">
           <div className="container">
-            <div className="home-featured__label">
+            {/* h2 (não div): dá heading real à seção e evita o salto h1→h3 do
+                título do card destaque (WAVE: "skipped heading level"). */}
+            <h2 className="home-featured__label" id="featured-heading">
               <span className="home-featured__dot" />
               Destaque
-            </div>
+            </h2>
             <NewsCard article={featured} variant="featured" />
           </div>
         </section>
