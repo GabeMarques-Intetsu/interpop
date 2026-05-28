@@ -8,6 +8,8 @@ import { LegalContent } from '@/pages/Legal/LegalContent';
 import { useAuth } from '@/contexts/AuthContext';
 import { authService } from '@/services/authService';
 import { extractApiError } from '@/utils/extractApiError';
+import { PasswordChecklist } from '@/components/ui/PasswordChecklist';
+import { isPasswordStrong } from '@/utils/passwordRules';
 import './Auth.css';
 
 interface RegisterForm {
@@ -44,6 +46,7 @@ export function Register() {
 
   const passwordMismatch =
     form.confirm !== '' && form.confirm !== form.password;
+  const passwordWeak = !isPasswordStrong(form.password);
 
   // Cadastro real: POST /auth/register/ (seta cookie httpOnly + emite tokens),
   // depois refreshUser() carrega o usuário no contexto via /auth/me/, então
@@ -51,7 +54,7 @@ export function Register() {
   // pré-requisito (botão disabled), mas revalidamos aqui por segurança.
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (passwordMismatch || !agreed || submitting) return;
+    if (passwordMismatch || passwordWeak || !agreed || submitting) return;
     setError('');
     setSubmitting(true);
     try {
@@ -131,12 +134,13 @@ export function Register() {
           id="password"
           type="password"
           label="Senha"
-          placeholder="Mínimo 8 caracteres"
+          placeholder="Crie uma senha forte"
           value={form.password}
           onChange={set('password')}
           autoComplete="new-password"
           required
         />
+        <PasswordChecklist value={form.password} />
         <Input
           id="confirm"
           type="password"
@@ -185,7 +189,7 @@ export function Register() {
           variant="primary"
           size="lg"
           fullWidth
-          disabled={!agreed || passwordMismatch || submitting}
+          disabled={!agreed || passwordMismatch || passwordWeak || submitting}
         >
           {submitting ? 'Criando conta…' : 'Criar conta'}
         </Button>

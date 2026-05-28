@@ -115,6 +115,10 @@ AUTH_PASSWORD_VALIDATORS = [
     },
     {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
+    # Complexidade (maiúscula + minúscula + dígito + especial) — espelha o
+    # checklist do frontend; aplica a Register, troca de senha e reset (todos
+    # passam por validate_password).
+    {'NAME': 'apps.users.validators.PasswordComplexityValidator'},
 ]
 
 AUTHENTICATION_BACKENDS = [
