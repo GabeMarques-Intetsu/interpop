@@ -69,7 +69,7 @@
   --clr-cat-moda-bg: #faeeeb;
   --clr-cat-cinema: #b45309; /* amber — film reel (kept) */
   --clr-cat-cinema-bg: #fef3e7;
-  --clr-cat-literatura: #15803d; /* forest — book bindings (kept) */
+  --clr-cat-literatura: #166534; /* forest (green-800) — escurecido p/ o badge subtle (texto sobre fundo claro) passar WCAG AA: #15803d dava 4.40:1, #166534 dá 6.35:1 */
   --clr-cat-literatura-bg: #e8f5ec;
   --clr-cat-cultura-digital: #0e7490; /* teal — digital cool (kept) */
   --clr-cat-cultura-digital-bg: #e5f5fa;
