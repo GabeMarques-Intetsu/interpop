@@ -247,7 +247,11 @@
   transition: all var(--t-fast);
 }
 
-.home-filters__cat:hover {
+/* Hover só no chip NÃO-ativo: prévia da cor da editoria (borda + texto),
+   fundo continua branco. O :not é essencial — sem ele o seletor :hover
+   (especificidade 0,2,0) vence .home-filters__cat--active (0,1,0) e pinta o
+   TEXTO com a mesma cor do fundo ativo → palavra sumia ("botão todo escuro"). */
+.home-filters__cat:not(.home-filters__cat--active):hover {
   border-color: var(--chip-color, var(--clr-primary));
   color: var(--chip-color, var(--clr-primary));
 }
@@ -276,6 +280,12 @@
   background: var(--chip-color, var(--clr-primary));
   border-color: var(--chip-color, var(--clr-primary));
   color: var(--clr-white);
+}
+
+/* Feedback de hover no chip ativo: escurece levemente o fundo sólido sem
+   tocar na cor do texto — o branco continua legível (contraste só aumenta). */
+.home-filters__cat--active:hover {
+  filter: brightness(0.92);
 }
 
 /* ─── Grid ─── */
