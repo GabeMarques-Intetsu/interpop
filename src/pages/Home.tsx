@@ -31,7 +31,12 @@ export function Home() {
     articleService
       .list({ status: 'published', page: '1' })
       .then(({ data }) => {
-        const feat = data.results.find((a) => a.is_featured) ?? null;
+        // Híbrido (padrão NYT/Substack): usa o artigo marcado como destaque
+        // pela curadoria; se NENHUM estiver marcado (esquecimento comum em
+        // equipe pequena), cai pro mais recente publicado — a home nunca fica
+        // sem hero. results já vem ordenado por -published_at do backend.
+        const feat =
+          data.results.find((a) => a.is_featured) ?? data.results[0] ?? null;
         setFeatured(feat);
         // Carousel shows the latest N non-featured articles. The featured
         // article already has its own dedicated section, so excluding it

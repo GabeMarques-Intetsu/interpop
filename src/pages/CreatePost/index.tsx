@@ -26,6 +26,7 @@ interface FormState {
   body: string;
   category: string; // holds the selected category id as a string (form-native)
   cover_caption: string; // G1-style "Descrição — Foto: Agência"
+  is_featured: boolean; // marca como destaque do hero da home
 }
 
 const EMPTY: FormState = {
@@ -34,6 +35,7 @@ const EMPTY: FormState = {
   body: '',
   category: '',
   cover_caption: '',
+  is_featured: false,
 };
 
 export function CreatePost({ editingSlug }: CreatePostProps = {}) {
@@ -65,6 +67,7 @@ export function CreatePost({ editingSlug }: CreatePostProps = {}) {
           body: a.body ?? '',
           category: a.category ? String(a.category.id) : '',
           cover_caption: a.cover_caption ?? '',
+          is_featured: a.is_featured ?? false,
         });
         // Preview da capa atual (URL absoluta vinda do backend).
         if (a.cover_image) setCoverPreview(a.cover_image);
@@ -130,7 +133,11 @@ export function CreatePost({ editingSlug }: CreatePostProps = {}) {
     form.title.trim() &&
     form.excerpt.trim() &&
     form.body.trim() &&
-    form.category;
+    form.category &&
+    form.cover_caption.trim() && // legenda obrigatória
+    // imagem obrigatória: no create precisa de coverFile; no edit basta já
+    // ter uma capa (coverPreview vem do artigo carregado).
+    (coverFile || (isEditing && coverPreview));
 
   async function handlePublish(e: React.FormEvent) {
     e.preventDefault();
@@ -146,6 +153,7 @@ export function CreatePost({ editingSlug }: CreatePostProps = {}) {
         body: form.body.trim(),
         category_id: Number(form.category),
         cover_caption: form.cover_caption.trim(),
+        is_featured: form.is_featured,
         ...(coverFile ? { cover_image: coverFile } : {}),
       };
 
@@ -155,7 +163,6 @@ export function CreatePost({ editingSlug }: CreatePostProps = {}) {
         await articleService.create({
           ...payload,
           status: 'published',
-          is_featured: false,
         });
       }
       setPublished(true);
@@ -364,10 +371,10 @@ export function CreatePost({ editingSlug }: CreatePostProps = {}) {
             {/* ── Image upload ── */}
             <div className="input-field">
               <label className="input-label">
-                Imagem de capa
+                Imagem de capa *
                 <span className="admin__label-optional">
                   {' '}
-                  (recomendado: 1920 × 1080 px · 16:9 — também é o máximo)
+                  (1920 × 1080 px · 16:9 — também é o máximo)
                 </span>
               </label>
 
@@ -447,8 +454,7 @@ export function CreatePost({ editingSlug }: CreatePostProps = {}) {
             {/* Legenda da capa — padrão G1 "Descrição — Foto: Agência" */}
             <div className="input-field">
               <label htmlFor="post-cover-caption" className="input-label">
-                Legenda da capa
-                <span className="admin__label-optional"> (opcional)</span>
+                Legenda da capa *
               </label>
               <input
                 id="post-cover-caption"
@@ -458,7 +464,29 @@ export function CreatePost({ editingSlug }: CreatePostProps = {}) {
                 value={form.cover_caption}
                 onChange={set('cover_caption')}
                 maxLength={300}
+                required
               />
+            </div>
+
+            {/* Destaque na home — só 1 artigo pode ser o hero (backend garante
+                unicidade ao salvar). Padrão Substack/NYT: curadoria manual. */}
+            <div className="input-field">
+              <label className="create-post__toggle">
+                <input
+                  type="checkbox"
+                  checked={form.is_featured}
+                  onChange={(e) =>
+                    setForm((f) => ({ ...f, is_featured: e.target.checked }))
+                  }
+                />
+                <span>
+                  Destacar no topo da home
+                  <span className="create-post__toggle-hint">
+                    Vira a matéria principal (hero). Marcar este desmarca o
+                    destaque anterior automaticamente.
+                  </span>
+                </span>
+              </label>
             </div>
           </div>
         </form>
