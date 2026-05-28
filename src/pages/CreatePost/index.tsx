@@ -227,7 +227,7 @@ export function CreatePost({ editingSlug }: CreatePostProps = {}) {
   return (
     <div className="create-post">
       {/* ── Header ── */}
-      <div className="create-post__header">
+      <header className="create-post__header">
         <div className="create-post__header-left">
           <button
             className="create-post__back"
@@ -268,7 +268,7 @@ export function CreatePost({ editingSlug }: CreatePostProps = {}) {
                 : 'Publicar'}
           </Button>
         </div>
-      </div>
+      </header>
 
       {apiError && (
         <div
@@ -287,7 +287,7 @@ export function CreatePost({ editingSlug }: CreatePostProps = {}) {
         </div>
       )}
 
-      <div className="create-post__body">
+      <main className="create-post__body">
         {/* ── Form ── */}
         <form
           id="create-post-form"
@@ -370,7 +370,9 @@ export function CreatePost({ editingSlug }: CreatePostProps = {}) {
 
             {/* ── Image upload ── */}
             <div className="input-field">
-              <label className="input-label">
+              {/* htmlFor associa o rótulo ao input file (id post-cover-file) —
+                  sem isso o WAVE marca "Orphaned form label". */}
+              <label className="input-label" htmlFor="post-cover-file">
                 Imagem de capa *
                 <span className="admin__label-optional">
                   {' '}
@@ -549,7 +551,7 @@ export function CreatePost({ editingSlug }: CreatePostProps = {}) {
             </div>
           </aside>
         )}
-      </div>
+      </main>
     </div>
   );
 }
