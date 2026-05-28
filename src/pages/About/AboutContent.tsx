@@ -15,9 +15,16 @@ interface AboutContentProps {
   /** Quando dentro de Modal, queremos que o "Assinar newsletter" feche o
    *  modal antes de navegar — evita CTA pra outra rota com modal aberto. */
   onNavigate?: () => void;
+  /** Nível dos títulos das seções. Em /sobre vêm sob o h1 da página → h2
+   *  (default). Dentro do Modal (título já é h2) → h3, evitando salto. */
+  headingLevel?: 'h2' | 'h3';
 }
 
-export function AboutContent({ onNavigate }: AboutContentProps) {
+export function AboutContent({
+  onNavigate,
+  headingLevel = 'h2',
+}: AboutContentProps) {
+  const H = headingLevel;
   return (
     <div className="about-content">
       <p className="about-content__lede">
@@ -26,7 +33,7 @@ export function AboutContent({ onNavigate }: AboutContentProps) {
       </p>
 
       <section className="about-content__section">
-        <h3>Por que existimos</h3>
+        <H>Por que existimos</H>
         <p>
           A partir da cultura pop e das dinâmicas midiáticas, o projeto
           investiga como determinados Atores exercem influência política de
@@ -43,7 +50,7 @@ export function AboutContent({ onNavigate }: AboutContentProps) {
       </section>
 
       <section className="about-content__section">
-        <h3>Pilares editoriais</h3>
+        <H>Pilares editoriais</H>
         <ul className="about-content__pillars">
           <li>
             <strong>Música</strong> — circuitos de exportação cultural,
@@ -69,7 +76,7 @@ export function AboutContent({ onNavigate }: AboutContentProps) {
       </section>
 
       <section className="about-content__section">
-        <h3>Como contribuir</h3>
+        <H>Como contribuir</H>
         <p>
           Receba nossas análises por e-mail e ajude o projeto a crescer. Toda
           publicação é resultado de pesquisa independente — apoio do leitor é o
