@@ -241,6 +241,11 @@ export function Article() {
               <p className="article-author-card__name">
                 {article.author.full_name}
               </p>
+              {article.author.username && (
+                <p className="article-author-card__username">
+                  @{article.author.username}
+                </p>
+              )}
               <p className="article-author-card__role">
                 {article.author.role === 'admin' ||
                 article.author.role === 'dev'
