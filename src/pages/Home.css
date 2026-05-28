@@ -248,13 +248,33 @@
 }
 
 .home-filters__cat:hover {
-  border-color: var(--clr-primary);
-  color: var(--clr-primary);
+  border-color: var(--chip-color, var(--clr-primary));
+  color: var(--chip-color, var(--clr-primary));
+}
+
+/* Cor por categoria — espelha o sistema --clr-cat-* dos badges dos cards.
+   Chip ativo de "Cinema" fica âmbar (igual ao badge CINEMA), "Moda" terracota,
+   etc. "Todos" não tem data-category → cai no fallback navy.
+   Todas as 5 cores passam WCAG AA (>=5:1) com texto branco — verificado. */
+.home-filters__cat[data-category='musica'] {
+  --chip-color: var(--clr-cat-musica);
+}
+.home-filters__cat[data-category='moda'] {
+  --chip-color: var(--clr-cat-moda);
+}
+.home-filters__cat[data-category='cinema'] {
+  --chip-color: var(--clr-cat-cinema);
+}
+.home-filters__cat[data-category='literatura'] {
+  --chip-color: var(--clr-cat-literatura);
+}
+.home-filters__cat[data-category='cultura-digital'] {
+  --chip-color: var(--clr-cat-cultura-digital);
 }
 
 .home-filters__cat--active {
-  background: var(--clr-primary);
-  border-color: var(--clr-primary);
+  background: var(--chip-color, var(--clr-primary));
+  border-color: var(--chip-color, var(--clr-primary));
   color: var(--clr-white);
 }
 
