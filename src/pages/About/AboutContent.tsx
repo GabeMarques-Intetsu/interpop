@@ -10,7 +10,6 @@
  * Estilos compartilhados em /pages/About/About.css.
  */
 import { Link } from 'react-router-dom';
-import { Button } from '@/components/ui/Button';
 
 interface AboutContentProps {
   /** Quando dentro de Modal, queremos que o "Assinar newsletter" feche o
@@ -77,11 +76,16 @@ export function AboutContent({ onNavigate }: AboutContentProps) {
           que sustenta o trabalho.
         </p>
         <div className="about-content__cta">
-          <Button variant="primary" size="lg">
-            <Link to="/newsletter" onClick={onNavigate}>
-              Assinar newsletter
-            </Link>
-          </Button>
+          {/* Link estilizado como botão (NÃO <Button><Link>): button>a é HTML
+              inválido e fazia a área de padding do botão virar zona morta —
+              só o texto do <a> navegava, exigindo cliques repetidos. */}
+          <Link
+            to="/newsletter"
+            onClick={onNavigate}
+            className="btn btn--primary btn--lg"
+          >
+            Assinar newsletter
+          </Link>
           <a
             href="mailto:interpop.cc@gmail.com?subject=Contato"
             className="about-content__contact-link"
