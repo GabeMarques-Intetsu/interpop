@@ -566,7 +566,7 @@ export function Admin() {
                               : user.role === 'admin'
                                 ? '🛡️ Admin'
                                 : user.role === 'editor'
-                                  ? '✍️ Redator'
+                                  ? '✍️ Editor'
                                   : '📖 Leitor'}
                           </span>
                         </td>
@@ -664,7 +664,7 @@ export function Admin() {
                       color: 'var(--clr-muted)',
                     }}
                   >
-                    Redatores podem solicitar banimentos de usuários — aparecem
+                    Editores podem solicitar banimentos de usuários — aparecem
                     aqui para sua aprovação.
                   </p>
                 </div>

@@ -13,7 +13,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     class Role(models.TextChoices):
         DEV    = 'dev',    'Dev'              # dono/criador — todo poder do admin + IMUNE a ban
         ADMIN  = 'admin',  'Administrador'   # poder total — incluindo banir (também imune a ban)
-        EDITOR = 'editor', 'Redator'          # publica artigos + solicita ban
+        EDITOR = 'editor', 'Editor'           # publica artigos + solicita ban
         USER   = 'user',   'Leitor'           # cadastro público; só lê/comenta/curte
 
     id         = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
