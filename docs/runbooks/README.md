@@ -4,26 +4,26 @@
 > a ser preenchido conforme incidentes reais ocorrerem. Não inventar conteúdo
 > antes de ter sintomas reais — runbook sem evidência vira ficção.
 
-Cada runbook segue o formato:
+Cada runbook segue o formato (alinhado à skill _engenharia-de-requisitos_ v1.28 — carrega um **id `RB-NN`** no H1 + um link **↑** ao `RNF` que operacionaliza; o id vive no documento, o filename é mantido por já ser referenciado em ADRs/specs):
 
 ```
+RB-NN (header)   → tipo · gatilho · status
+Operacionaliza ↑ → o RNF de resiliência/disponibilidade que este procedimento entrega
 Sintoma          → o que o operador vê (alerta, log, comportamento do usuário)
 Diagnóstico      → passos para confirmar a hipótese (comandos, dashboards)
 Ações            → procedimento de mitigação (ordem, comandos, side-effects)
 Escalation       → quando + para quem escalar
-Postmortem link  → link para postmortem após resolução
+Postmortem link  → link para o PM-NN após resolução
 ```
 
 ## Catálogo
 
-| #   | Runbook                                                                | Cobre                                                    |
-| --- | ---------------------------------------------------------------------- | -------------------------------------------------------- |
-| 1   | [gunicorn-down.md](./gunicorn-down.md)                                 | App não responde (502/504 do nginx)                      |
-| 2   | [celery-worker-stuck.md](./celery-worker-stuck.md)                     | Tasks Celery enfileirando sem processar                  |
-| 3   | [database-connection-exhausted.md](./database-connection-exhausted.md) | "too many connections" no Postgres                       |
-| 4   | [disk-full.md](./disk-full.md)                                         | /var ou / cheio (logs, media, backups)                   |
-| 5   | [redis-down.md](./redis-down.md)                                       | Cache + Celery broker offline                            |
-| 6   | [smtp-failure.md](./smtp-failure.md)                                   | Emails não saem (welcome, password reset, notifications) |
-| 7   | [ddos-spike.md](./ddos-spike.md)                                       | Tráfego anômalo / abuse                                  |
+| Id      | Runbook                                                                            | Cobre                                                            | ↑ RNF                   |
+| ------- | ---------------------------------------------------------------------------------- | ---------------------------------------------------------------- | ----------------------- |
+| `RB-01` | [RB-01-celery-worker-stuck.md](./RB-01-celery-worker-stuck.md)                     | Tasks Celery enfileirando sem processar                          | availability            |
+| `RB-02` | [RB-02-database-connection-exhausted.md](./RB-02-database-connection-exhausted.md) | "too many connections" no Postgres                               | availability            |
+| `RB-03` | [RB-03-ddos-spike.md](./RB-03-ddos-spike.md)                                       | Tráfego anômalo / abuse                                          | availability · security |
+| `RB-04` | [RB-04-disk-full.md](./RB-04-disk-full.md)                                         | /var ou / cheio (logs, media, backups)                           | availability            |
+| _pend._ | gunicorn-down.md · redis-down.md · smtp-failure.md                                 | App down · Cache/broker down · SMTP falhando (ainda sem arquivo) | availability            |
 
 Detalhe completo: HOSTING-DEPLOY-PLAN.md §1222-§1232.

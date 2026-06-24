@@ -4,21 +4,23 @@
 > Cada incidente SEV-1 ou SEV-2 deve gerar um postmortem dentro de 7 dias.
 > SEV-3 fica a critério.
 
-## Convenção de nome de arquivo
+## Convenção de nome de arquivo + id
 
-`YYYY-MM-DD-slug-curto.md`
+`YYYY-MM-DD-slug-curto.md` (mantido — referenciado por ADRs/specs/BUG). Cada postmortem carrega um **id `PM-NN`** no próprio H1 + os links de rastreabilidade (alinhamento à skill _engenharia-de-requisitos_ v1.28): o id vive no documento, não no filename.
 
-Ex.: `2026-05-19-c1-jwt-rotation-broken.md`
+## Rastreabilidade (v1.28)
+
+Todo postmortem liga **↑** ao `RNF`/`CA` de dependability que **falhou em produção**, **←** à origem (incidente/triagem), e **↓** às ações corretivas (`BUG`/`TX` + eventual aperto de `RNF`, pelo documento de requisitos primeiro). É um **documento** que se liga à espinha (como ADR) — não é item de backlog.
 
 ## Template
 
-[`TEMPLATE.md`](./TEMPLATE.md) — copiar + renomear + preencher.
+[`_TEMPLATE.md`](./_TEMPLATE.md) — copiar + preencher (esqueleto de rastreabilidade; o relato blameless completo segue a prática deste README).
 
 ## Catálogo
 
-| Data       | Severidade | Título                                                                                | Status                            |
-| ---------- | ---------- | ------------------------------------------------------------------------------------- | --------------------------------- |
-| 2026-05-19 | SEV-2      | [C1: rotação de JWT silenciosamente quebrada](./2026-05-19-c1-jwt-rotation-broken.md) | Resolvido — postmortem retroativo |
+| Id      | Data       | Severidade | Título                                                                    | Status                            |
+| ------- | ---------- | ---------- | ------------------------------------------------------------------------- | --------------------------------- |
+| `PM-01` | 2026-05-19 | SEV-2      | [Rotação de JWT silenciosamente quebrada](./PM-01-jwt-rotation-broken.md) | Resolvido — postmortem retroativo |
 
 ---
 

@@ -1,9 +1,23 @@
-# Postmortem: rotação de JWT silenciosamente quebrada — toda sessão expirava em 15min
+# PM-01 — Rotação de JWT silenciosamente quebrada (toda sessão expirava em 15 min)
+
+> **Tipo**: Postmortem (registro de incidente em produção — NÃO é item de backlog)
+> **Severidade**: 🟠 SEV-2 · **Camada**: Backend (auth/sessão) · **Status**: 📦 Fechado (ações rastreadas)
+> **Data do incidente / detecção**: 2026-05-18 / 2026-05-19
 
 > Postmortem retroativo (A39 do reorganization-proposal). O incidente ocorreu
 > antes de termos cultura formal de postmortems; reconstruído a partir do
 > commit fix (`docs/planning/Improvement-system.md §11.1 C1`) e do teste
 > de regressão em `backend/apps/users/tests/test_services.py`.
+
+## Rastreabilidade (v1.28)
+
+| Direção                | Liga a                                                                                                                                                                                                                                     |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **↑ violou**           | [`RNF-security`](../requirements/RNF/RNF-security.md) (A07 — _Identification & Auth Failures_: rotação de JWT) · [`F-01`](../backlog/features/F-01-autenticacao-jwt-cookie-httponly.md) (renovação silenciosa da credencial ao expirar)    |
+| **← origem**           | detectado por inspeção durante o refactor de session-auth (`docs/planning/session-auth-strategy.md`) — anterior ao inbox de `issues/`                                                                                                      |
+| **↓ ações corretivas** | [`BUG-01`](../backlog/bugs/BUG-01-sessao-expira-em-15-minutos.md) (o defeito) · gate `--cov-fail-under=40` (A26) · política anti-`except Exception: pass` (`Improvement-system.md §12`) · LOGGING estruturado `request_id`+`user_id` (A27) |
+
+> **O loop**: as ações corretivas já reentraram no backlog como `BUG-01` + melhorias de processo. Nenhum requisito foi _afrouxado_ — o `RNF-security` permaneceu; o que faltou foi **cobertura funcional** que o provasse (ver Aprendizados).
 
 ## Cabeçalho
 

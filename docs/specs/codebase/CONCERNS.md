@@ -226,7 +226,7 @@
 
 ### O-02 — Backup automático sem teste de restore
 
-- **VERIFICADO:** runbooks existem (`docs/runbooks/database-connection-exhausted.md`, etc.) mas não há runbook `restore-from-backup.md`. Backup via cron + `pg_dump` (assumido pela HOSTING-DEPLOY-PLAN). Sem prova de restore mensal.
+- **VERIFICADO:** runbooks existem (`docs/runbooks/RB-02-database-connection-exhausted.md`, etc.) mas não há runbook `restore-from-backup.md`. Backup via cron + `pg_dump` (assumido pela HOSTING-DEPLOY-PLAN). Sem prova de restore mensal.
 - **IMPACTO:** "temos backup" sem teste = sem backup. Em incidente real, restore falha = downtime + perda de dado.
 - **MITIGAR:** runbook + cron que mensalmente faz `pg_restore` em DB efêmero + check de integridade.
 - **STATUS:** débito de DR; alta prioridade quando passar para prod.
@@ -354,7 +354,7 @@ Estes são padrões que existem **hoje** no codebase mas **não** devem ser usad
 ## Cross-references
 
 - Proposta de reorganização (histórica): `docs/planning/reorganization-proposal-2026-05-21.md` (gitignored).
-- Postmortems: `docs/postmortems/README.md` + `2026-05-19-c1-jwt-rotation-broken.md`.
+- Postmortems: `docs/postmortems/README.md` + `PM-01-jwt-rotation-broken.md`.
 - Improvement-system (master ADRs): `docs/planning/Improvement-system.md` (gitignored).
 - Spec da busca editorial: `docs/specs/busca-editorial/{DESIGN,BACKLOG,REVIEW-PHASE-{1,2,3},SECURITY-REVIEW,TEST-STRATEGY}.md`.
 - Política de testes (INEGOCIÁVEL): `docs/tests/testing-standards.md` + CLAUDE.md §6.

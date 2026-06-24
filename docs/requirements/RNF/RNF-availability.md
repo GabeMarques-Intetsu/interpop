@@ -30,7 +30,7 @@ Sistema deve estar disponível para leitor anônimo (leitura de artigos) **mesmo
 | **DB connection exhausted** | nginx retorna 503 + Retry-After; runbook em `docs/runbooks/`                               |
 | **SMTP down**               | Welcome/notification atrasados; usuário vê mensagem "vai chegar em alguns minutos"         |
 | **OG crawler timeout**      | Middleware devolve HTML básico sem cards ricos; crawler retry                              |
-| **Disco cheio**             | nginx 503 + alert; runbook `disk-full.md` instrui purge                                    |
+| **Disco cheio**             | nginx 503 + alert; runbook `RB-04-disk-full.md` instrui purge                              |
 
 ### Health check (`GET /healthz/`)
 
@@ -60,15 +60,15 @@ Sistema deve estar disponível para leitor anônimo (leitura de artigos) **mesmo
 
 ## Runbooks operacionais ([`docs/runbooks/`](../../runbooks/README.md))
 
-| Runbook                            | Cenário                   |
-| ---------------------------------- | ------------------------- |
-| `celery-worker-stuck.md`           | Worker travado            |
-| `database-connection-exhausted.md` | DB pool esgotado          |
-| `ddos-spike.md`                    | Spike de tráfego suspeito |
-| `disk-full.md`                     | Disco saturado            |
-| `gunicorn-down.md`                 | App server down           |
-| `redis-down.md`                    | Cache + broker down       |
-| `smtp-failure.md`                  | SendGrid falhando         |
+| Runbook                                  | Cenário                   |
+| ---------------------------------------- | ------------------------- |
+| `RB-01-celery-worker-stuck.md`           | Worker travado            |
+| `RB-02-database-connection-exhausted.md` | DB pool esgotado          |
+| `RB-03-ddos-spike.md`                    | Spike de tráfego suspeito |
+| `RB-04-disk-full.md`                     | Disco saturado            |
+| `gunicorn-down.md`                       | App server down           |
+| `redis-down.md`                          | Cache + broker down       |
+| `smtp-failure.md`                        | SendGrid falhando         |
 
 ---
 

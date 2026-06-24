@@ -59,7 +59,7 @@ Timeboxed em 3 dias:
 ### Negativas
 
 - Se um dos gatilhos disparar abruptamente (ex.: disco saturado em prod), entrada no Sprint 6 será reativa, não planejada
-- Storage local em nginx tem limite prático (~30k MAU = ~5GB de capas) — operacionalmente precisa ser monitorado em runbook (`disk-full.md`)
+- Storage local em nginx tem limite prático (~30k MAU = ~5GB de capas) — operacionalmente precisa ser monitorado em runbook (`RB-04-disk-full.md`)
 
 ### Trade-offs aceitos
 
